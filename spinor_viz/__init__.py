@@ -11,6 +11,7 @@ from spinor_viz.core import (
     spinor_to_halfangles,
     halfangles_to_spinor,
     spinor_to_bloch_vector,
+    fix_gauge,
 )
 from spinor_viz.visualization import (
     plot_spinor_2d,
@@ -27,6 +28,7 @@ __all__ = [
     "spinor_to_halfangles",
     "halfangles_to_spinor",
     "spinor_to_bloch_vector",
+    "fix_gauge",
     "plot_spinor_2d",
     "plot_spinor_3d",
     "plot_complex",

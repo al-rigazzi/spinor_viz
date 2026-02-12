@@ -1,0 +1,104 @@
+\section{\label{sec:planar} Planar half-angle construction}
+
+Before constructing the full three-dimensional spinor visualization, we develop a simpler two-dimensional precursor that captures the essential half-angle geometry. This planar construction isolates the dependence of spinor \emph{magnitudes} on a half-angle and motivates the spatial ``hyperchord'' construction used later.
+
+\subsection{Setup}
+\label{sec:planar_setup}
+
+Consider the unit circle $C=\{(x,y)\in\Rtwo:x^2+y^2=1\}$ centered at the origin. Fix the reference diameter along the $x$-axis, with endpoints
+\[
+P_+=(1,0),\qquad P_-=(-1,0).
+\]
+Let $Q(\theta)=(\cos\theta,\sin\theta)$ be a point on $C$, parametrized by $\theta$.
+
+\subsection{The chord construction}
+\label{sec:planar_chords}
+
+For a given $\theta$, define two chords:
+\begin{enumerate}
+    \item the \textbf{upper chord} $\overline{P_+Q(\theta)}$,
+    \item the \textbf{lower chord} $\overline{P_-Q(\theta)}$.
+\end{enumerate}
+A direct computation gives
+\begin{align}
+    |P_+Q(\theta)|^2 &= (\cos\theta-1)^2+\sin^2\theta = 2-2\cos\theta = 4\sin^2(\theta/2), \\
+    |P_-Q(\theta)|^2 &= (\cos\theta+1)^2+\sin^2\theta = 2+2\cos\theta = 4\cos^2(\theta/2),
+\end{align}
+hence
+\begin{align}
+    |P_+Q(\theta)| &= 2\,|\sin(\theta/2)|, \\
+    |P_-Q(\theta)| &= 2\,|\cos(\theta/2)|.
+\end{align}
+In particular,
+\[
+|P_+Q(\theta)|^2+|P_-Q(\theta)|^2=4,
+\]
+which mirrors the identity $\sin^2(\theta/2)+\cos^2(\theta/2)=1$.
+
+\paragraph{Remark (choice of range).}
+If one restricts to $\theta\in[0,\pi]$ (upper semicircle), then $\sin(\theta/2),\cos(\theta/2)\ge 0$ and the absolute values may be dropped. We keep $\theta$ on $[0,2\pi)$ when discussing the $2\pi$ versus $4\pi$ behavior, but the planar chord \emph{lengths} depend only on $|\sin(\theta/2)|$ and $|\cos(\theta/2)|$.
+
+\subsection{Connection to spinor components}
+\label{sec:planar_spinor}
+
+For a normalized spinor, we adopt the symmetric phase convention
+\begin{equation}
+\label{eq:spinor_symmetric}
+\ssp
+= e^{i\gamma}
+\begin{bmatrix}
+e^{-i\varphi/2}\cos(\vartheta/2)\\
+e^{+i\varphi/2}\sin(\vartheta/2)
+\end{bmatrix},
+\qquad
+\vartheta\in[0,\pi],\ \varphi\in[0,2\pi),\ \gamma\in[0,2\pi).
+\end{equation}
+In this planar precursor we are concerned only with the \emph{magnitudes}, so we set $\vartheta=\theta$ (and ignore $\varphi,\gamma$ for the moment). Then
+\begin{align}
+    |\ssp_\uparrow| &= \cos(\theta/2), \\
+    |\ssp_\downarrow| &= \sin(\theta/2),
+\end{align}
+and, for $\theta\in[0,\pi]$,
+\begin{align}
+    |\ssp_\uparrow| &= |P_-Q(\theta)|/2, \\
+    |\ssp_\downarrow| &= |P_+Q(\theta)|/2.
+\end{align}
+Thus the chord lengths encode the spinor component magnitudes (up to a factor of $2$).
+
+\subsection{Angle doubling and spinor periodicity}
+\label{sec:planar_periodicity}
+
+As $\theta$ ranges from $0$ to $2\pi$, the point $Q(\theta)$ traverses the circle once, whereas the half-angle $\theta/2$ ranges from $0$ to $\pi$. Consequently, the \emph{pair of chord lengths}---and therefore the pair of magnitudes $(|\ssp_\uparrow|,|\ssp_\downarrow|)$---returns to its initial values after $\theta\mapsto\theta+2\pi$.
+
+However, in the spinorial representation of spatial rotations one has
+\[
+U(\Theta)=\exp\!\left(-\tfrac{i}{2}\Theta\,\hat{n}\cdot\sigma\right)\in SU(2),
+\qquad
+U(\Theta+2\pi)=-\,U(\Theta),
+\]
+so a continuous $2\pi$ rotation in physical space corresponds to a sign change of the spinor (and full return only after $4\pi$). The planar chord \emph{lengths} cannot encode this sign: they depend only on magnitudes and are therefore insensitive to an overall phase factor.
+
+This motivates the spatial construction, where we augment the half-angle magnitude encoding with explicit phase/orientation markers so that $\ssp$ and $-\ssp$ are visually distinct.
+
+\begin{figure}[ht!]
+    \centering
+    \subfloat[Angle $\theta$]{%
+        \includegraphics[width=0.48\textwidth]{viz_figures/planar_chords_theta_py.png}%
+    }
+    \subfloat[Angle $\theta+\pi$]{%
+        \includegraphics[width=0.48\textwidth]{viz_figures/planar_chords_theta_pi_py.png}%
+    }
+    \caption{Planar chord construction. (a)~For angle $\theta$, the chord from $P_-$ to $Q$ (blue) has length $2|\cos(\theta/2)|$, while the chord from $P_+$ to $Q$ (red) has length $2|\sin(\theta/2)|$. The right angle at $Q$ follows from Thales' theorem (triangle $P_+QP_-$ subtends a diameter). (b)~For $\theta+\pi$, the chord lengths exchange roles, reflecting the half-angle dependence.}
+    \label{fig:planar_chords}
+\end{figure}
+
+\subsection{From planar to spatial}
+\label{sec:planar_to_spatial}
+
+The planar precursor encodes only the polar dependence (via half-angle magnitudes). To represent the full spinor data in \eqref{eq:spinor_symmetric}, we must promote the construction to three dimensions:
+\begin{itemize}
+    \item chord lengths become radii of plane--sphere intersection circles (the ``hyperchord faces'');
+    \item the \emph{relative} phase $\varphi$ is encoded as a relative orientation between the two faces;
+    \item the fiber coordinate (global phase choice) $\gamma$ is encoded as a common rotation of the phase markers.
+\end{itemize}
+This promotion is developed in Section~\ref{sec:hyperchords}.

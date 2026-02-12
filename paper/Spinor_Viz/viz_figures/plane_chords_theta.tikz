@@ -1,0 +1,66 @@
+\begin{tikzpicture}[scale=1.0, line cap=round, line join=round]
+\def\R{2.2}      % draw radius (represents u)
+\def\thdeg{50}   % theta in degrees, in (0,180)
+
+% Points
+\coordinate (O) at (0,0);
+\coordinate (A) at (-\R,0);
+\coordinate (B) at ( \R,0);
+\coordinate (P) at ({\R*cos(\thdeg)},{\R*sin(\thdeg)});
+\coordinate (Q) at ({\R*cos(\thdeg/2)},{\R*sin(\thdeg/2)});
+\coordinate (Qx) at ({\R*cos(\thdeg/2)},0);
+\coordinate (Qy) at (0,{\R*sin(\thdeg/2)});
+
+% Circle and axes
+\draw[thick] (O) circle (\R);
+\draw[->] (-2.8,0) -- (2.9,0) node[below] {$x$};
+\draw[->] (0,-2.6) -- (0,2.9) node[left] {$y$};
+
+% Diameter
+\draw[thick] (A) -- (B);
+\node[below] at (A) {$A$};
+\node[below] at (B) {$B$};
+
+% Normal ray OP and inward normal vector u(theta)=P->O
+\draw[dashed] (O) -- (P) node[pos=0.55, above right] {$\nn(\theta)$};
+\draw[->,thick] (P) -- (O) node[midway, above left] {$\uu(\theta)$};
+\fill (P) circle (1.2pt) node[above right] {$P(\theta)$};
+
+% Plane Pi_theta: line through origin orthogonal to OP
+\def\planeang{\thdeg+90}
+\draw[thick]
+  ({-3.0*cos(\planeang)},{-3.0*sin(\planeang)}) --
+  ({ 3.0*cos(\planeang)},{ 3.0*sin(\planeang)})
+  node[pos=0.90, above right] {$\Pi_\theta$};
+
+% Chords PA and PB (right triangle)
+\draw[thick] (P) -- (A) node[pos=0.55, left] {$c_1$};
+\draw[thick] (P) -- (B) node[pos=0.55, right] {$c_2$};
+
+% Right angle marker at P (Thales)
+% Construct a small square using directions along the two chords
+\coordinate (Pa) at ($(P)!0.12!(A)$);
+\coordinate (Pb) at ($(P)!0.12!(B)$);
+\coordinate (Pc) at ($(Pa)+(Pb)-(P)$);
+\draw (Pa) -- (Pc) -- (Pb);
+
+% Bisector rays from origin: angle theta/2 and orthogonal
+\draw[dashed] (O) -- ({2.6*cos(\thdeg/2)},{2.6*sin(\thdeg/2)}) node[pos=0.92, above] {$\bb(\theta)$};
+\draw[dashed] (O) -- ({2.6*cos(\thdeg/2+90)},{2.6*sin(\thdeg/2+90)}) node[pos=0.92, left] {$\bb_\perp(\theta)$};
+
+% Half-angle point Q on circle
+\fill (Q) circle (1.1pt) node[above left] {$Q(\theta)$};
+\draw[thin] (O) -- (Q);
+
+% "Bisector triangle" projections
+\draw[thin] (Q) -- (Qx);
+\draw[thin] (Q) -- (Qy);
+\fill (Qx) circle (0.8pt);
+\fill (Qy) circle (0.8pt);
+
+% Angle marker theta at origin (from x-axis to OP)
+\def\arcr{0.65}
+\draw (\arcr,0) arc[start angle=0, end angle=\thdeg, radius=\arcr];
+\node at ({1.15*\arcr*cos(\thdeg/2)},{1.15*\arcr*sin(\thdeg/2)}) {$\theta$};
+
+\end{tikzpicture}

@@ -1,0 +1,93 @@
+% ****** spinor_visualization.tex ******
+%
+%   Spinor Visualization Paper - Part 1 of the restructured manuscript
+%   Derived from the original R3 Spinors manuscript
+%
+% TeX'ing this file requires that you have AMS-LaTeX 2.0 installed
+% as well as the rest of the prerequisites for REVTeX 4.1
+%
+% Commands:
+%  1)  latex  spinor_visualization
+%  2)  bibtex spinor_visualization
+%  3)  latex  spinor_visualization
+%  4)  latex  spinor_visualization
+
+\documentclass[
+amsmath,amssymb,aps,
+preprint,pra]{revtex4-2}
+
+\usepackage{relsize}
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{newtxtext,newtxmath}
+\usepackage{bm}% bold math
+\usepackage{trimclip}
+\usepackage[single]{accents}
+
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{etoolbox}
+\usepackage[outline]{contour}
+\usepackage{todonotes}
+\usepackage{tikz}
+\usetikzlibrary{calc,intersections,angles,quotes}
+\usepackage[caption=false]{subfig}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[colorlinks=true,allcolors=blue]{hyperref}
+
+%% Apr 2021: AIP requests that the corresponding
+%% email to be moved after the affiliations
+\makeatletter
+\def\@email#1#2{%
+ \endgroup
+ \patchcmd{\titleblock@produce}
+  {\frontmatter@RRAPformat}
+  {\frontmatter@RRAPformat{\produce@RRAP{*#1\href{mailto:#2}{#2}}}\frontmatter@RRAPformat}
+  {}{}
+}%
+\makeatother
+
+\bibliographystyle{apsrev4-2}
+\setlength {\marginparwidth }{2cm}
+\begin{document}
+
+\input{newcommands}
+
+\preprint{PREPRINT}
+
+\title[Geometric Visualization of Spinors]{Geometric Visualization of Two-Dimensional Spinors in \texorpdfstring{$\Rt$}{R3}}
+
+% Force line breaks with \\
+\author{Alessandro Rigazzi}
+ \email{alrigazzi@gmail.com}
+\affiliation{
+Switzerland
+}%
+
+\date{\today}
+
+\begin{abstract}
+\input{viz_sections/viz_abstract}
+\end{abstract}
+
+\maketitle
+
+\input{viz_sections/viz_intro}
+\input{viz_sections/viz_planar}
+\input{viz_sections/viz_hyperchords}
+\input{viz_sections/viz_su2}
+\input{viz_sections/viz_algorithm}
+\input{viz_sections/viz_discussion}
+
+\appendix
+
+\section{\label{sec-app:pseudocode}Visualization Algorithm Details}
+\input{viz_sections/viz_app_code}
+
+\bibliography{bibliography}
+
+\end{document}
+%
+% ****** End of file spinor_visualization.tex ******

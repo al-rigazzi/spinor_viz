@@ -1,0 +1,187 @@
+\section{\label{sec:algorithm} Visualization Algorithm}
+
+This section specifies a concrete mapping
+\[
+\ssp=\begin{bmatrix}\spu\\ \spd\end{bmatrix}\in\mathbb{C}^2
+\quad\longmapsto\quad
+\bigl(S_u,\;c_\uparrow,\;c_\downarrow,\;\text{phase markers}\bigr)
+\]
+suitable for implementation in a 3D renderer.
+All geometric objects are expressed in the fixed Cartesian frame
+$\{\eex,\eey,\eez\}$ and use the paper's convention
+\[
+S_u:=\{\xx\in\Rt:\norm{\xx}=u\},\qquad u:=\ssp^\dagger\ssp=|\spu|^2+|\spd|^2.
+\]
+(Thus $u$ sets the sphere radius; the spinor's Euclidean norm is $\sqrt{u}$. In the common normalized case $u=1$.)
+
+\subsection{Overview}
+Given $\ssp$, the visualization proceeds in three stages:
+\begin{enumerate}
+  \item \textbf{Extract} $(u,\theta,\phi,\gamma)$ from the spinor components, where $\theta$ controls magnitudes, $\phi$ is the relative phase, and $\gamma$ is a chosen Hopf-fiber (common) phase.
+  \item \textbf{Construct} the two hyperchord circles $c_\uparrow$ and $c_\downarrow$ as explicit plane--sphere intersections,
+        with radii matching $u\cos(\theta/2)$ and $u\sin(\theta/2)$.
+  \item \textbf{Encode phases} by drawing oriented diameter markers on each circle, determined by the component arguments $\arg(\spu)$ and $\arg(\spd)$.
+\end{enumerate}
+
+\subsection{Parameter extraction}
+Let
+\begin{equation}
+u:=|\spu|^2+|\spd|^2,\qquad \rho:=\sqrt{u}.
+\end{equation}
+Define the half-angle moduli
+\begin{equation}
+\cos\thetaT := \frac{|\spu|}{\rho},\qquad \sin\thetaT := \frac{|\spd|}{\rho},
+\qquad\text{so that}\qquad
+\theta = 2\arctan2\!\bigl(|\spd|,|\spu|\bigr)\in[0,\pi].
+\end{equation}
+
+Write the component phases as
+\[
+\spu = |\spu|\,e^{\iu\psi_\uparrow},\qquad
+\spd = |\spd|\,e^{\iu\psi_\downarrow},
+\qquad
+\psi_\uparrow:=\arg(\spu),\ \psi_\downarrow:=\arg(\spd)\quad(\mathrm{mod}\ 2\pi).
+\]
+Define the relative phase and a symmetric (fiber) phase by
+\begin{equation}
+\label{eq:algorithm_phase_defs}
+\phi := \psi_\downarrow-\psi_\uparrow\quad(\mathrm{mod}\ 2\pi),
+\qquad
+\gamma := \tfrac12(\psi_\uparrow+\psi_\downarrow)\quad(\mathrm{mod}\ 2\pi).
+\end{equation}
+With these definitions one has the standard symmetric spinor form
+\begin{equation}
+\label{eq:algorithm_spinor_symmetric}
+\ssp
+=
+\rho\,e^{\iu\gamma}
+\begin{bmatrix}
+e^{-\iu\phi/2}\cos\thetaT\\[2pt]
+e^{+\iu\phi/2}\sin\thetaT
+\end{bmatrix}.
+\end{equation}
+(Equivalently, fixing a gauge by setting $\gamma=\phi/2$ reduces \eqref{eq:algorithm_spinor_symmetric} to the familiar form
+$\rho\,e^{\iu\alpha}[\cos\thetaT,\ e^{\iu\phi}\sin\thetaT]^T$ with upper component real and nonnegative.)
+
+\paragraph{Degenerate cases.}
+If $|\spu|=0$ or $|\spd|=0$, the corresponding argument is undefined and the relative phase $\phi$ is not encoded in the geometry. In such cases one may set $\phi:=0$ and choose $\gamma$ from the nonzero component (e.g.\ $\gamma:=\psi_\downarrow$ when $|\spu|=0$).
+
+\subsection{Circle construction from closed-form plane data}
+Introduce the radial and azimuthal unit vectors in the equatorial plane,
+\begin{equation}
+\ee_r(\phi):=\cos\phi\,\eex+\sin\phi\,\eey,
+\qquad
+\ee_\varphi(\phi):=-\sin\phi\,\eex+\cos\phi\,\eey,
+\end{equation}
+so that $\{\ee_r(\phi),\ee_\varphi(\phi),\eez\}$ is right-handed.
+
+\paragraph{Equator contact points.}
+Define the two antipodal equator points
+\begin{equation}
+P_\uparrow := u\,\ee_r(\phi)\in e,
+\qquad
+P_\downarrow := -u\,\ee_r(\phi)\in e,
+\end{equation}
+which are the tangency points of $c_\uparrow$ and $c_\downarrow$ with the equator in the reference view.
+
+\paragraph{Hyperchord plane normals and offsets.}
+Define the unit normals of the two \emph{offset} planes $U'$ and $L'$ by
+\begin{equation}
+\label{eq:algorithm_plane_normals}
+\hat{\nn}_\uparrow := \sin\thetaT\,\ee_r(\phi)+\cos\thetaT\,\eez,
+\qquad
+\hat{\nn}_\downarrow := \cos\thetaT\,\ee_r(\phi)-\sin\thetaT\,\eez.
+\end{equation}
+These satisfy $\hat{\nn}_\uparrow\cdot\hat{\nn}_\downarrow=0$, hence $U'\perp L'$.
+The signed plane equations are chosen so that $P_\uparrow\in U'$ and $P_\downarrow\in L'$:
+\begin{equation}
+\label{eq:algorithm_plane_equations}
+U':\ \hat{\nn}_\uparrow\cdot \xx = d_\uparrow,
+\qquad
+L':\ \hat{\nn}_\downarrow\cdot \xx = -d_\downarrow,
+\end{equation}
+where
+\begin{equation}
+d_\uparrow:=\hat{\nn}_\uparrow\cdot P_\uparrow = u\sin\thetaT,
+\qquad
+d_\downarrow:=-(\hat{\nn}_\downarrow\cdot P_\downarrow)=u\cos\thetaT.
+\end{equation}
+(These are exactly the offsets stated in Section~\ref{sec:hyperchords_faces}.)
+
+\paragraph{Circle centers and radii.}
+For a unit-normal plane $\hat{\nn}\cdot\xx=d$, the circle $S_u\cap\{\hat{\nn}\cdot\xx=d\}$ has center $d\hat{\nn}$ and radius $\sqrt{u^2-d^2}$.
+Thus,
+\begin{align}
+C_\uparrow &= d_\uparrow\,\hat{\nn}_\uparrow, &
+r_\uparrow &= \sqrt{u^2-d_\uparrow^2}=u\cos\thetaT,
+\\
+C_\downarrow &= (-d_\downarrow)\,\hat{\nn}_\downarrow, &
+r_\downarrow &= \sqrt{u^2-d_\downarrow^2}=u\sin\thetaT.
+\end{align}
+Equivalently (using $\rho=\sqrt{u}$),
+\begin{equation}
+r_\uparrow = \rho\,|\spu|,
+\qquad
+r_\downarrow = \rho\,|\spd|.
+\end{equation}
+
+\paragraph{Shared point (useful for validation).}
+The two planes \eqref{eq:algorithm_plane_equations} intersect the sphere in circles that share the point
+\begin{equation}
+\label{eq:algorithm_shared_point}
+Q := u\bigl(-\cos\theta\,\ee_r(\phi)+\sin\theta\,\eez\bigr)\in S_u,
+\end{equation}
+which is the highest point of the rotated equator $e'=E'\cap S_u$ (cf.\ Section~\ref{sec:hyperchords_setup}).
+One checks directly that $Q\in U'\cap L'$ by dotting with $\hat{\nn}_\uparrow$ and $\hat{\nn}_\downarrow$.
+
+\subsection{Parametric rendering of the inclined circles}
+To sample points on each circle, choose an orthonormal basis in each plane.
+A convenient choice is to reuse the azimuthal direction $\ee_\varphi(\phi)$, which is orthogonal to both $\ee_r(\phi)$ and $\eez$, hence lies in both planes:
+\begin{equation}
+\bb := \ee_\varphi(\phi),\qquad
+\aaa_\uparrow := \bb\times \hat{\nn}_\uparrow,\qquad
+\aaa_\downarrow := \bb\times \hat{\nn}_\downarrow.
+\end{equation}
+Then $\{\aaa_\uparrow,\bb\}$ is an orthonormal basis of $U'$, and $\{\aaa_\downarrow,\bb\}$ is an orthonormal basis of $L'$.
+The circle parameterizations are
+\begin{align}
+\label{eq:algorithm_circle_param_up}
+\xx_\uparrow(t) &= C_\uparrow + r_\uparrow\bigl(\cos t\,\aaa_\uparrow+\sin t\,\bb\bigr),\qquad t\in[0,2\pi),
+\\
+\label{eq:algorithm_circle_param_down}
+\xx_\downarrow(t) &= C_\downarrow + r_\downarrow\bigl(\cos t\,\aaa_\downarrow+\sin t\,\bb\bigr),\qquad t\in[0,2\pi).
+\end{align}
+A renderer can discretize $t_k=2\pi k/N$ and draw the resulting polyline.
+
+\subsection{Phase markers}
+
+Each complex component defines an in-plane direction (a ``flag'' on the corresponding face).
+Using $\psi_\uparrow$ and $\psi_\downarrow$ from above, define the two diameter directions
+\begin{equation}
+\dd_\uparrow := \cos\psi_\uparrow\,\aaa_\uparrow+\sin\psi_\uparrow\,\bb,
+\qquad
+\dd_\downarrow := \cos\psi_\downarrow\,\aaa_\downarrow+\sin\psi_\downarrow\,\bb,
+\end{equation}
+and render (for example) the oriented segments
+\begin{equation}
+\label{eq:algorithm_phase_markers}
+\text{upper marker: } C_\uparrow \to C_\uparrow + r_\uparrow\,\dd_\uparrow,
+\qquad
+\text{lower marker: } C_\downarrow \to C_\downarrow + r_\downarrow\,\dd_\downarrow.
+\end{equation}
+The \emph{relative} phase $\phi$ is visible as the relative rotation between the two markers, since
+$\phi=\psi_\downarrow-\psi_\uparrow$.
+A common shift $\psi_\uparrow\mapsto\psi_\uparrow+\delta$ and $\psi_\downarrow\mapsto\psi_\downarrow+\delta$
+rotates both markers by the same amount in their respective faces; in terms of \eqref{eq:algorithm_phase_defs} this is precisely $\gamma\mapsto\gamma+\delta$ at fixed $\phi$.
+
+If one prefers to display real/imaginary axes explicitly, draw two orthogonal arrows on each face along $\dd$ and $\dd^\perp$ with $\dd^\perp:=(-\sin\psi)\aaa+(\cos\psi)\bb$, optionally scaling them by $|\Re(\ssp_i)|$ and $|\Im(\ssp_i)|$ and encoding the sign by line style.
+
+\subsection{Complete scene assembly}
+A minimal visualization consists of:
+\begin{enumerate}
+  \item the sphere $S_u$ (or just its equator $e$);
+  \item the circles $c_\uparrow$ and $c_\downarrow$ via \eqref{eq:algorithm_circle_param_up}--\eqref{eq:algorithm_circle_param_down}, drawn with distinct colors and line widths for visual discriminability (see Appendix~\ref{sec-app:pseudocode} for the specific encoding);
+  \item the equator contact points $P_\uparrow$ and $P_\downarrow$, marked with upward ($\blacktriangle$) and downward ($\blacktriangledown$) triangles, respectively;
+  \item the phase markers \eqref{eq:algorithm_phase_markers}.
+\end{enumerate}
+Optional elements include the Bloch vector (computed from the normalized spinor) and a meridian arc through $P_\uparrow$ and $P_\downarrow$ to guide the eye.

@@ -102,3 +102,15 @@ dmypy.json
 *.avi
 *.eps
 !docs/*.png
+*.aux
+*.bbl
+*.blg
+*.out
+*.log
+*.fls
+*.gz
+*.fdb_latexmk
+
+
+# OLD IMP
+matlab/*

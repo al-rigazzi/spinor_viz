@@ -1,0 +1,43 @@
+\section{\label{sec:introduction} Introduction}
+
+Spinors were discovered by {\'E}lie Cartan \cite{Cartan1913groupes}
+while he was working on the linear representation of simple groups.
+They are the most basic representation of the
+rotation and Lorentz groups and all other representations can be obtained
+as tensor products of spinors \cite{cartan2012theory}.
+For this reason, they are often loosely described as the square
+roots of Euclidean (or Minkowskian) vectors \cite{farmelo2009strangest}.
+Spinors are difficult to picture not only because
+their components are in general complex, but also because when the Euclidean space
+is rotated by an angle of $2\pi$, they do not return to their initial state (like vectors do),
+but acquire a multiplicative phase of $-1$. Only rotations
+of multiples of $4\pi$ are thus equivalent to the identity operator on spinors.
+
+The standard approach for visualizing the state of a two-level quantum system is the Bloch sphere representation. While powerful and widely used, the Bloch sphere has a fundamental limitation: it represents only the \emph{direction} associated with a spinor (via the Bloch vector $\vv$), collapsing the global phase information. Furthermore, the Bloch sphere does not make explicit how the individual spinor components contribute to the overall state.
+
+Spinors are not only intimately related to several group-theoretical
+and geometrical objects, such as quaternions, Hopf fibrations,
+stereographic projections, and M\"obius transformations
+\cite{hanson2006visualizing,penrose1984spinors,needham2021visual},
+but also of great importance for physics, as they are needed
+to correctly describe the wavefunction of $\half$ particles
+\cite{hladik1996spineurs,schwichtenberg2015physics}.
+
+In this work, we develop a geometric representation of
+two-dimensional spinors that overcomes these limitations.
+Starting from simple considerations about vectors, reference
+frames, and half-angle constructions, we build a visualization
+where:
+\begin{itemize}
+    \item The \emph{moduli} of the spinor components are encoded as the radii of two circle sections on a sphere;
+    \item The \emph{relative phase} between components appears as a geometric rotation of these circles;
+    \item The \emph{global phase} is also geometrically represented;
+    \item The characteristic $4\pi$-periodicity of spinors is made visually manifest.
+\end{itemize}
+
+The paper is organized as follows. In Section~\ref{sec:planar} we introduce a planar half-angle construction that serves as the foundation for the three-dimensional visualization. Section~\ref{sec:hyperchords} promotes this construction to $\Rt$, defining the ``hyperchord'' circles that form our spinor representation. Section~\ref{sec:su2_viz} connects the geometric construction to the standard spinor formalism and shows how $\sut$ rotations act on the visualization. Section~\ref{sec:algorithm} presents the rendering algorithm with pseudocode. We conclude with a discussion in Section~\ref{sec:discussion}.
+An open-source Python implementation of the visualization, together with interactive Jupyter notebooks, is available at \url{https://github.com/al-rigazzi/spinor_viz}~\cite{spinor_viz_github}.
+
+The reader interested in a comprehensive exposure of spinors
+and their algebra is referred to articles \cite{steane2013introduction,wheler2000spinor}
+and monographs \cite{lounesto2001clifford,penrose1984spinors,hall2015lie} on the subject.

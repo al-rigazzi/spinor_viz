@@ -1,0 +1,224 @@
+\section{\label{sec:hyperchords} Hyperchord construction in three dimensions}
+
+We now promote the planar half-angle construction of Section~\ref{sec:planar} to three dimensions,
+obtaining the central geometric objects of this paper: two offset circle sections on a sphere,
+which we call the \emph{hyperchord faces}.
+
+\subsection{Setup: rotated equatorial plane and the highest equator point}
+\label{sec:hyperchords_setup}
+\paragraph{Geometric scaling convention.}
+A two-component $SU(2)$ spinor $\ssp\in\mathbb{C}^2$ carries a natural quadratic invariant
+$u:=\ssp^\dagger\ssp$.
+In this work we use $u$ as the \emph{geometric scale parameter}.
+Concretely, rather than embedding $\ssp$ directly, we embed the rescaled spinor
+\begin{equation}
+\label{eq:scaled_spinor}
+\widetilde{\ssp} := \|\ssp\|\,\ssp = \sqrt{u}\,\ssp,
+\end{equation}
+whose Euclidean norm is
+\begin{equation}
+\label{eq:scaled_norm}
+\|\widetilde{\ssp}\| = \sqrt{\widetilde{\ssp}^\dagger\widetilde{\ssp}}
+= \sqrt{(\sqrt{u}\,\ssp)^\dagger(\sqrt{u}\,\ssp)} = \sqrt{u(\ssp^\dagger\ssp)} = u.
+\end{equation}
+This is the reason the sphere used in the visualization has radius $u$.
+In dimensional terms, if one assigns spinors the conventional length-dimension $[\ssp]=L^{1/2}$ (so that quadratic spinor bilinears carry dimension $L$), then $u=\ssp^\dagger\ssp$ has units of length and $S_u$ is a genuine length-scale object.
+For normalized quantum states one has $u=1$, and the construction reduces to the unit-radius case.
+For notational simplicity, we continue to write $\ssp$ for the input spinor and use $u:=\ssp^\dagger\ssp$ to set the scene scale.
+
+Fix the sphere of radius $u$,
+\[
+S_u := \{\,\mathbf{x}\in\Rt : \norm{\mathbf{x}}=u\,\},
+\]
+with $u:=\ssp^\dagger\ssp$ as in \eqref{eq:scaled_spinor}--\eqref{eq:scaled_norm}. Note that the geometry of the two faces depends only on $(\theta,\phi)$, while $u$ acts as an overall similarity scale and $\gamma$ acts as a common in-face marker rotation.
+
+
+and the reference equatorial plane $E:=\xyplane$ with equator $e:=E\cap S_u$.
+The primary datum is a rotated equatorial plane $E'=\RotMat E$, for some $\RotMat\in\sot$.
+Unprimed symbols refer to the reference configuration; primed symbols to the rotated one.
+
+Let $\vv$ be a chosen unit normal to $E'$ (so $E'$ determines $\vv$ up to sign), and define
+\[
+\theta\in[0,\pi]
+\qquad\text{by}\qquad
+\vv\cdot \eez = \cos\theta .
+\]
+Equivalently, $\theta$ is the dihedral angle between $E'$ and $E$ (since $\eez$ is the unit normal to $E$).
+
+Let
+\[
+e' := E'\cap S_u
+\]
+denote the rotated equator. We single out a canonical point on $e'$ by taking the maximizer of the
+$z$-coordinate:
+\[
+Q \;:=\; \arg\max_{\mathbf{x}\in e'} \;(\mathbf{x}\cdot\eez).
+\]
+For $\theta\in(0,\pi)$ this point is unique and can be written explicitly.
+Indeed, the unit vector in $E'$ that maximizes $\mathbf{x}\cdot\eez$ is the normalized projection of $\eez$
+onto $E'$, i.e.
+\[
+\widehat{\mathbf{h}}
+:=
+\frac{\eez-(\eez\cdot\vv)\,\vv}{\norm{\eez-(\eez\cdot\vv)\,\vv}}
+=
+\frac{\eez-\cos\theta\,\vv}{\sin\theta}
+\in E',
+\qquad
+Q := u\,\widehat{\mathbf{h}}.
+\]
+In particular,
+\[
+Q\cdot\eez = u\,\sin\theta,
+\qquad
+\text{and}\qquad
+\vv\cdot Q = 0.
+\]
+(For the degenerate cases $\theta=0$ or $\theta=\pi$, the entire equator $e'$ lies in the $xy$-plane and
+the maximizer is not unique; in that case we fix $Q$ by choosing an azimuth $\phi$ as discussed in
+Section~\ref{sec:hyperchords_equator}.)
+
+\subsection{Definition of the two faces via dihedral bisectors}
+\label{sec:hyperchords_faces}
+
+The hyperchord planes $U'$ and $L'$ are defined as follows.
+
+First form the two unit \emph{bisector normals}
+\[
+\nn_\uparrow := \frac{\eez+\vv}{\norm{\eez+\vv}}
+= \frac{\eez+\vv}{2\cos(\theta/2)},
+\qquad
+\nn_\downarrow := \frac{\eez-\vv}{\norm{\eez-\vv}}
+= \frac{\eez-\vv}{2\sin(\theta/2)},
+\]
+where the half-angle normalizations use $\norm{\eez+\vv}^2 = 2+2\cos\theta = 4\cos^2(\theta/2)$ and
+$\norm{\eez-\vv}^2 = 2-2\cos\theta = 4\sin^2(\theta/2)$.
+A direct computation gives
+\[
+\nn_\uparrow\cdot\nn_\downarrow
+\;\propto\;
+(\eez+\vv)\cdot(\eez-\vv)=\eez\cdot\eez-\vv\cdot\vv=0,
+\]
+so the bisector normals are orthogonal.
+
+Now define the \emph{offset} planes as the unique translates of the corresponding bisector planes
+through the origin that pass through $Q$:
+\[
+U' := \{\,\mathbf{x}\in\Rt : \nn_\uparrow\cdot \mathbf{x} = \nn_\uparrow\cdot Q\,\},
+\qquad
+L' := \{\,\mathbf{x}\in\Rt : \nn_\downarrow\cdot \mathbf{x} = \nn_\downarrow\cdot Q\,\}.
+\]
+By construction $Q\in U'\cap L'$ and $U'\perp L'$ (since their normals are orthogonal).
+
+The two hyperchord circles are then defined as the corresponding sphere sections
+\[
+c_\uparrow := U'\cap S_u,
+\qquad
+c_\downarrow := L'\cap S_u.
+\]
+
+\paragraph{Offsets and radii (half-angle law).}
+Because $Q\in E'$ we have $\vv\cdot Q=0$, hence
+\[
+\nn_\uparrow\cdot Q
+=
+\frac{(\eez+\vv)\cdot Q}{2\cos(\theta/2)}
+=
+\frac{\eez\cdot Q}{2\cos(\theta/2)}
+=
+\frac{u\sin\theta}{2\cos(\theta/2)}
+=
+u\sin(\theta/2),
+\]
+and similarly
+\[
+\nn_\downarrow\cdot Q
+=
+\frac{(\eez-\vv)\cdot Q}{2\sin(\theta/2)}
+=
+\frac{\eez\cdot Q}{2\sin(\theta/2)}
+=
+\frac{u\sin\theta}{2\sin(\theta/2)}
+=
+u\cos(\theta/2).
+\]
+Therefore the signed distances of the planes from the origin are
+\[
+\mathrm{dist}(U',0)=u\sin(\theta/2),
+\qquad
+\mathrm{dist}(L',0)=u\cos(\theta/2).
+\]
+A plane at distance $d$ from the origin cuts $S_u$ in a circle of radius $\sqrt{u^2-d^2}$, hence
+\[
+r_\uparrow = \sqrt{u^2-u^2\sin^2(\theta/2)} = u\cos(\theta/2),
+\qquad
+r_\downarrow = \sqrt{u^2-u^2\cos^2(\theta/2)} = u\sin(\theta/2),
+\]
+which is precisely the desired half-angle scaling.
+
+\subsection{Connection to the equator and definition of the azimuth \texorpdfstring{$\phi$}{phi}}
+\label{sec:hyperchords_equator}
+
+Each hyperchord circle is tangent to the reference equator $e$ at a single point, and these two tangent
+points are antipodal.
+
+To see this, intersect $U'$ with the $xy$-plane $E$ (i.e. set $z=0$). Using
+$\nn_\uparrow=(\eez+\vv)/(2\cos(\theta/2))$ and $\nn_\uparrow\cdot Q=u\sin(\theta/2)$, the plane equation
+$\nn_\uparrow\cdot\mathbf{x}=\nn_\uparrow\cdot Q$ reduces on $E$ to
+\[
+\vv\cdot\mathbf{x} = u\sin\theta
+\qquad (z=0).
+\]
+Writing $\vv=(v_x,v_y,v_z)$ with $v_z=\cos\theta$ and $\sqrt{v_x^2+v_y^2}=\sin\theta$, this is a line in $E$
+at distance
+\[
+\frac{u\sin\theta}{\sqrt{v_x^2+v_y^2}} = \frac{u\sin\theta}{\sin\theta}=u
+\]
+from the origin. Hence the line $\ell_\uparrow := U'\cap E$ is tangent to the equator circle
+$e=\{(x,y,0):x^2+y^2=u^2\}$ at a \emph{unique} point, which we denote by $P_\uparrow$.
+Explicitly, let $\widehat{\vv}_{xy}$ be the unit projection of $\vv$ onto $E$,
+\[
+\widehat{\vv}_{xy} := \frac{1}{\sin\theta}\,(v_x,v_y,0),
+\]
+then the tangency point is
+\[
+P_\uparrow := u\,\widehat{\vv}_{xy}\in e.
+\]
+The same calculation for $L'$ gives a tangent line $\ell_\downarrow := L'\cap E$ whose unique tangency point
+is the antipode
+\[
+P_\downarrow := -P_\uparrow.
+\]
+
+We define the azimuthal angle $\phi$ by writing
+\[
+P_\uparrow = u(\cos\phi,\sin\phi,0),
+\qquad
+P_\downarrow = u(\cos(\phi+\pi),\sin(\phi+\pi),0).
+\]
+In the visualization developed later, this $\phi$ is the geometric carrier of the \emph{relative phase}:
+rotating the entire configuration about the $z$-axis rigidly shifts $\phi$ by the same amount, while the
+half-angle structure of the faces will induce the characteristic spinorial response.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.7\columnwidth]{viz_figures/hyperchords_3d_py.png}
+    \caption{Hyperchord construction. The rotated equatorial plane $E'$ (primary datum) fixes the unit normal
+    $\vv$ and the dihedral angle $\theta$ with the reference plane $E=\xyplane$. The rotated equator
+    $e'=E'\cap S_u$ has a distinguished highest point $Q$. The two hyperchord planes $U'$ and $L'$ are the
+    unique translates (through $Q$) of the two dihedral-bisector planes between $E$ and $E'$, with normals
+    proportional to $\eez\pm\vv$. Their sphere sections are the circles $c_\uparrow$ (teal/bluish-green, thicker line, equator contact marked with $\blacktriangle$) and $c_\downarrow$ (orange, thinner line, equator contact marked with $\blacktriangledown$), with
+    radii $r_\uparrow=u\cos(\theta/2)$ and $r_\downarrow=u\sin(\theta/2)$. Each circle is tangent to the
+    reference equator $e$ at a unique point: $P_\uparrow$ for $c_\uparrow$ and $P_\downarrow=-P_\uparrow$
+    for $c_\downarrow$. The azimuth of $P_\uparrow$ is $\phi$.}
+    \label{fig:hyperchords_schematic}
+\end{figure}
+
+\subsection{Geometric meaning of the phases}
+\label{sec:hyperchords_phase}
+
+Once the spinor is written in the symmetric half-angle phase split used throughout this work,
+the two faces carry distinguished in-face diameter directions whose \emph{relative} rotation encodes
+the relative phase $\phi$, while their \emph{common} rotation encodes the fiber (global) phase $\gamma$.
+(We make this explicit after introducing the $SU(2)$ action on spinors in Section~\ref{sec:su2_viz}, using the symmetric phase split
+$\psi_\uparrow=\gamma-\phi/2$, $\psi_\downarrow=\gamma+\phi/2$.)

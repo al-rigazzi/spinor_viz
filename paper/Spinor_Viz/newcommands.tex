@@ -1,0 +1,119 @@
+\newcommand{\Rt}{\ensuremath{\mathbb{R}^3}}
+\newcommand{\Rtwo}{ \mathbb{R}^2 }
+\newcommand{\Rtp}{ \mathbb{R}^{3+1} }
+
+% Dirac notation
+\providecommand{\ket}[1]{\ensuremath{|#1\rangle}}
+\providecommand{\bra}[1]{\ensuremath{\langle#1|}}
+\providecommand{\braket}[2]{\ensuremath{\langle#1|#2\rangle}}
+
+\newcommand{\sut}{\ensuremath{\mathrm{SU}(2)}}
+\newcommand{\sutp}{\ensuremath{\mathrm{SU}'(2)}}
+\newcommand{\suo}{\ensuremath{\mathrm{SU}(1)}}
+\newcommand{\suop}{\ensuremath{\mathrm{SU}'(1)}}
+\newcommand{\sot}{\ensuremath{\mathrm{SO}(3)}}
+\newcommand{\sotwo}{\ensuremath{\mathrm{SO}(2)}}
+\newcommand{\slc}{\ensuremath{\mathrm{SL}(2,\mathbb{C})}}
+
+\newcommand{\SpRotMat}{\mathbf{S}}
+\newcommand{\half}{\ensuremath{\text{spin-}\frac{1}{2}}}
+\newcommand{\iu}{\imath}
+
+\NewDocumentCommand\RotMat{o}{%
+  \IfNoValueTF{#1}
+    {\ensuremath{\mathbf{R}}}
+    {\ensuremath{\mathbf{R}\!\left(#1\right)}}%
+}
+\newcommand{\RotMatAxis}[2] {\ensuremath{\mathbf{R}_{{#1}}\left({#2}\right)}}
+
+\NewDocumentCommand\BoostMat{o}{%
+  \IfNoValueTF{#1}
+    {\ensuremath{\mathbf{B}}}
+    {\ensuremath{\mathbf{B}\!\left(#1\right)}}%
+}
+\newcommand{\BoostMatAxis}[2] {\mathbf{B}_{#1}({\mathbf{#2}})}
+
+\renewcommand{\theta}{\vartheta}
+\newcommand{\thetat}{\ensuremath{\vartheta/2}}
+\newcommand{\phit}{\ensuremath{\varphi/2}}
+\renewcommand{\phi}{\varphi}
+\providecommand{\thetaT}{\tfrac{\vartheta}{2}}
+\newcommand{\phiT}{\tfrac{\varphi}{2}}
+\let\vv\relax
+\newcommand{\vv}{\bm{v}}
+\newcommand{\nn}{\mathbf{n}}
+\newcommand{\ww}{\mathbf{w}}
+\newcommand{\uu}{\mathbf{u}}
+\newcommand{\pp}{\mathbf{p}}
+\newcommand{\ff}{\mathbf{f}}
+\newcommand{\qq}{\mathbf{q}}
+\newcommand{\PP}{\mathbf{P}}
+\newcommand{\TT}{\mathbf{T}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\dd}{\mathbf{d}}
+\newcommand{\rr}{\mathbf{r}}
+\newcommand{\kk}{\mathbf{k}}
+\newcommand{\II}{\mathbf{I}}
+\newcommand{\xx}{\mathbf{x}}
+\newcommand{\ee}{\mathbf{e}}
+\newcommand{\aaa}{\mathbf{a}}
+
+\newcommand{\uuper}{\uu_\perp}
+\newcommand{\uupar}{\uu_\parallel}
+\newcommand{\tuupar}{\tilde{\uu}_\parallel}
+\newcommand{\tuuper}{\tilde{\uu}_\perp}
+
+\contourlength{.025em}% default is 0.03em
+\DeclareRobustCommand{\ssp}{\bm{\xi}}
+\newcommand{\sspplain}{\ensuremath{\xi}} % for subscripts, captions if needed
+\newcommand{\ssigma}{{\sigma}}
+\newcommand{\start}{
+    \hspace{-0.2pt}\clipbox{0.0pt 3pt 5pt 3pt}{\ensuremath{\vdash}
+}}
+
+\newcommand{\finish}{\trimbox{0pt -0.3pt 0pt 0.pt}{{\scalebox{0.75}[0.35]{\ensuremath{\triangleright}}}}}
+
+\newcommand\spbeg[1]{\accentset{\start}{#1}}
+\newcommand{\spend}[1]{\accentset{\finish}{#1}}
+
+
+\newcommand{\sbeg}{{\ensuremath{\spbeg{\ssp}}}}
+\newcommand{\sbegc}{{\ensuremath{\spbeg{\ssp^*}}}}
+\newcommand{\send}{\ensuremath{\spend{\ssp}}}
+\newcommand{\sendc}{\ensuremath{\spend{\ssp^*}}}
+\newcommand{\spu}{\ensuremath{\ssp_\uparrow}}
+\newcommand{\spd}{\ensuremath{\ssp_\downarrow}}
+\newcommand{\Sbeg}{\sut}
+\newcommand{\Send}{\sutp}
+\newcommand{\SSbeg}{\spbeg{\SpRotMat}}
+\newcommand{\SSend}{\spend{\SpRotMat}}
+\newcommand{\tlambda}{\tilde\lambda}
+\newcommand{\tLambda}{\tilde\Lambda}
+
+\newcommand{\eex}{\mathbf{e}_{x}}
+\newcommand{\eey}{\mathbf{e}_{y}}
+\newcommand{\eez}{\mathbf{e}_{z}}
+\newcommand{\eect}{\mathbf{e}_{ct}}
+\newcommand{\tvect}[2]{%
+  \ensuremath{\left[\begin{smallmatrix}#1\\#2\end{smallmatrix}\right]}
+  }
+
+\newcommand{\Tvect}[3]{%
+  \ensuremath{\left[\begin{smallmatrix}#1\\#2\\#3\end{smallmatrix}\right]}
+  }
+\newcommand{\ttfrac}[2]{
+    \ensuremath{\frac{\tiny #1}{\tiny #2}}
+    }
+
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\minus}{\scalebox{0.65}[1.0]{\ensuremath{-}}}
+\newcommand{\pminus}{\ensuremath{\scalebox{0.75}{$\pm$}}}
+\newcommand{\plane}[2]{\ensuremath{#1#2}\text{\nobreakdash-plane}}
+\newcommand{\xyplane}{\protect\plane{x}{y}}
+\newcommand{\norm}[1]{\ensuremath{\lVert#1\rVert}}
+
+\newcommand{\spradius}{\ensuremath{{u^{\frac{1}{2}}}}}
+
+\newcommand{\secref}[1]{Section~\ref{#1}}
+\newcommand{\ssppm}{\ssp_{\pminus}}
+\providecommand{\omegaT}{\tfrac{\omega}{2}}

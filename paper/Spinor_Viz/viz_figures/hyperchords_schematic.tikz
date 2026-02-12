@@ -1,0 +1,47 @@
+% Requires in preamble:
+% \usepackage{tikz}
+% \usetikzlibrary{calc}
+
+\begin{tikzpicture}[scale=1.05, line cap=round, line join=round]
+
+% Parameters (purely schematic)
+\def\R{2.2}      % sphere radius in drawing
+\def\tilt{25}    % schematic tilt angle (degrees)
+
+% Sphere outline (projected)
+\draw[thick] (0,0) circle (\R);
+
+% Reference equator (xy-plane intersection)
+\draw[thick] (-\R,0) -- (\R,0);
+\node at (0,-0.25) {$e$};
+
+% Rotated equatorial plane E' (drawn as a diameter line)
+\draw[thick] ({-\R*cos(\tilt)},{-\R*sin(\tilt)}) -- ({\R*cos(\tilt)},{\R*sin(\tilt)});
+\node[above right] at ({1.15*cos(\tilt)},{1.15*sin(\tilt)}) {$E'$};
+
+% Indicate inclination theta between E' and xy-plane (small arc near origin)
+\def\arcr{0.7}
+\draw (\arcr,0) arc[start angle=0, end angle=\tilt, radius=\arcr];
+\node at ({1.15*\arcr*cos(\tilt/2)},{1.15*\arcr*sin(\tilt/2)}) {$\theta$};
+
+% Hyperchord circles shown schematically as projected ellipses
+% Upper face c_up (tilted ellipse above)
+\draw[thick, blue] (0,0.55) ellipse ({1.55} and {0.55});
+\node[right, blue] at (1.55,0.55) {$c_\uparrow$};
+\draw[<->, blue] (-1.55,0.55) -- (1.55,0.55);
+\node[blue] at (0,0.78) {$2r_\uparrow$};
+
+% Lower face c_down (tilted ellipse below, orthogonal in spirit)
+\draw[thick, red] (0,-0.70) ellipse ({1.15} and {0.38});
+\node[right, red] at (1.15,-0.70) {$c_\downarrow$};
+\draw[<->, red] (-1.15,-0.70) -- (1.15,-0.70);
+\node[red] at (0,-0.92) {$2r_\downarrow$};
+
+% Label poles (purely schematic)
+\fill (0,\R) circle (1pt) node[above] {$N$};
+\fill (0,-\R) circle (1pt) node[below] {$S$};
+
+% Bloch vector (normal to E')
+\draw[->, thick, green!50!black] (0,0) -- ({1.5*sin(\tilt)},{1.5*cos(\tilt)}) node[above right] {$\vv$};
+
+\end{tikzpicture}

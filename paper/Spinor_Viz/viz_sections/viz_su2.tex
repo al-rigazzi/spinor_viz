@@ -1,0 +1,220 @@
+\section{\label{sec:su2_viz} Connection to SU(2) and the Bloch vector}
+
+The hyperchord construction of Section~\ref{sec:hyperchords} realizes, in geometric terms, the standard parametrization of a two-component spinor and the associated Bloch vector map.
+Throughout this section we keep the scale convention
+\[
+u := \ssp^\dagger\ssp,
+\]
+and we recall the geometric embedding convention introduced in Section~\ref{sec:hyperchords_setup}:
+the rendered scene is scaled by the rescaled spinor
+\[
+\widetilde{\ssp}:=\|\ssp\|\,\ssp=\sqrt{u}\,\ssp,
+\qquad\text{so that}\qquad
+\|\widetilde{\ssp}\|=u.
+\]
+This is why the visualization sphere is $S_u=\{\xx\in\Rt:\|\xx\|=u\}$.
+All direction-only quantities (e.g.\ the Bloch vector) are invariant under this scaling.
+
+
+\subsection{Standard half-angle parametrization}
+\label{sec:standard_param}
+
+Let $\ssp\in\mathbb{C}^2\setminus\{0\}$ and write $\rho:=\|\ssp\|=\sqrt{u}$.
+Using the symmetric (Hopf-fiber) phase split adopted throughout this work, $\ssp$ can be written as
+\begin{equation}
+\label{eq:spinor_symmetric_halfangle}
+\ssp
+=
+\rho\,e^{\iu\gamma}
+\begin{bmatrix}
+e^{-\iu\phi/2}\cos(\theta/2)\\[2pt]
+e^{+\iu\phi/2}\sin(\theta/2)
+\end{bmatrix},
+\qquad
+\theta\in[0,\pi],\;\phi\in[0,2\pi),\;\gamma\in[0,2\pi).
+\end{equation}
+Equivalently, in terms of component arguments
+\[
+\spu=|\spu|e^{\iu\psi_\uparrow},\qquad
+\spd=|\spd|e^{\iu\psi_\downarrow},
+\]
+one has
+\begin{equation}
+\label{eq:phase_split_defs_secIV}
+\phi=\psi_\downarrow-\psi_\uparrow\ (\mathrm{mod}\ 2\pi),
+\qquad
+\gamma=\tfrac12(\psi_\uparrow+\psi_\downarrow)\ (\mathrm{mod}\ 2\pi),
+\qquad
+\psi_\uparrow=\gamma-\phi/2,\ \psi_\downarrow=\gamma+\phi/2.
+\end{equation}
+The moduli are
+\[
+|\spu|=\rho\cos(\theta/2),
+\qquad
+|\spd|=\rho\sin(\theta/2),
+\qquad
+\frac{|\spu|^2}{u}=\cos^2(\theta/2),
+\qquad
+\frac{|\spd|^2}{u}=\sin^2(\theta/2).
+\]
+
+\paragraph{Gauge-fixed form (common in the literature).}
+A frequently used gauge chooses a representative in which the upper component is real and nonnegative, yielding
+\[
+\ssp
+=
+\rho\,e^{\iu\alpha}
+\begin{bmatrix}
+\cos(\theta/2)\\
+e^{\iu\phi}\sin(\theta/2)
+\end{bmatrix}
+\quad\text{for some }\alpha\in[0,2\pi),
+\]
+which is equivalent to \eqref{eq:spinor_symmetric_halfangle} after absorbing a phase into $\alpha$.
+We use the symmetric split \eqref{eq:spinor_symmetric_halfangle} because it separates the relative phase $\phi$ from the common (fiber) phase $\gamma$ in a way that matches the face-marker geometry.
+
+
+\subsection{Bloch vector and the SU(2)\texorpdfstring{\(\to\)}{->}SO(3) map}
+\label{sec:bloch_vector}
+
+Let \(\ssigma_x,\ssigma_y,\ssigma_z\) denote the Pauli matrices.
+The (unit) Bloch vector associated with \(\ssp\) is defined by
+\begin{equation}
+\label{eq:bloch_def}
+\nn(\ssp)
+:=
+\frac{1}{\ssp^\dagger\ssp}
+\begin{bmatrix}
+\ssp^\dagger\ssigma_x\ssp\\
+\ssp^\dagger\ssigma_y\ssp\\
+\ssp^\dagger\ssigma_z\ssp
+\end{bmatrix}
+\in\Rt,
+\qquad
+\norm{\nn(\ssp)}=1,
+\end{equation}
+and for the half-angle parametrization \eqref{eq:spinor_symmetric_halfangle} one obtains the standard expression
+\begin{equation}
+\label{eq:bloch_angles}
+\nn(\ssp)=
+\begin{bmatrix}
+\sin\theta\cos\phi\\
+\sin\theta\sin\phi\\
+\cos\theta
+\end{bmatrix}.
+\end{equation}
+This is the usual SU(2) double-cover map to SO(3) (via the adjoint action on Pauli matrices); see \cite{altmann2013rotations,penrose1984spinors}.
+
+In the present visualization, the \emph{primary datum} is the rotated equatorial plane \(E'\) (Section~\ref{sec:hyperchords_setup}), with chosen unit normal \(\vv\).
+We identify this normal with the Bloch direction,
+\begin{equation}
+\label{eq:v_equals_bloch}
+\vv=\nn(\ssp),
+\end{equation}
+so that the polar angle \(\theta\) appearing in Section~\ref{sec:hyperchords_setup} (defined by \(\vv\cdot\eez=\cos\theta\)) is exactly the Bloch polar angle in \eqref{eq:bloch_angles}. (Choosing the opposite normal $-\vv$ corresponds to $\theta\mapsto\pi-\theta$ together with the exchange of the two components; the construction is otherwise unchanged.)
+
+The azimuth \(\phi\) is read geometrically from the equator via the tangency points \(P_\uparrow\) and \(P_\downarrow\) (Section~\ref{sec:hyperchords_equator}).
+
+\subsection{Born-rule weights from face areas}
+\label{sec:reading_probabilities}
+
+From Section~\ref{sec:hyperchords_faces}, the two hyperchord circles have radii
+\[
+r_\uparrow=u\cos(\theta/2),
+\qquad
+r_\downarrow=u\sin(\theta/2).
+\]
+Hence the corresponding disk areas
+\[
+A_\uparrow=\pi r_\uparrow^2=\pi u^2\cos^2(\theta/2),
+\qquad
+A_\downarrow=\pi r_\downarrow^2=\pi u^2\sin^2(\theta/2)
+\]
+satisfy the normalized relations
+\begin{equation}
+\label{eq:born_areas}
+\frac{A_\uparrow}{\pi u^2}=\cos^2(\theta/2)=\frac{\|\spu\|^2}{u},
+\qquad
+\frac{A_\downarrow}{\pi u^2}=\sin^2(\theta/2)=\frac{\|\spd\|^2}{u}.
+\end{equation}
+Thus, at fixed \(u\), the hyperchord face areas encode the standard two-level Born weights.
+
+\subsection{Equivalent encoding via minimal projected lengths}
+\label{sec:born_projected_lengths}
+
+A second (independent) encoding comes from \emph{minimal} orthogonal projections onto the \xyplane.
+The clean way to see it is by slicing the sphere with vertical planes parallel to the meridian plane determined by the common point \(Q\) and the tangency points \(P_\uparrow,P_\downarrow\) (cf. Figure~\ref{fig:hyperchords_schematic}).
+
+Fix such a vertical slice at signed distance \(|y_d|\le u\) from the origin.
+Its intersection with the sphere is a circle of radius
+\[
+r_d=\sqrt{u^2-y_d^2}.
+\]
+In that slice, the two relevant equator points are \((\pm r_d,0)\) (in \((x,z)\)-coordinates), while the highest point of the rotated equator occurs at
+\[
+H'(y_d)=(-r_d\cos\theta,\; r_d\sin\theta),
+\]
+(where, without loss of generality, we have rotated azimuth so that the meridian direction coincides with the \(x\)-axis; the final formulas are azimuth-independent).
+
+Now consider the two Euclidean segments in the slice connecting \(H'(y_d)\) to the two equator points \((\pm r_d,0)\).
+Their orthogonal projections onto the \xyplane coincide with their \(x\)-projections in the slice, and therefore have lengths
+\begin{equation}
+\label{eq:slice_lengths}
+\ell_+(y_d)=r_d(1+\cos\theta),
+\qquad
+\ell_-(y_d)=r_d(1-\cos\theta).
+\end{equation}
+At \(y_d=0\) this yields the extremal projected chord lengths
+\[
+\ell_+(0)=u(1+\cos\theta)=2u\cos^2(\theta/2),
+\qquad
+\ell_-(0)=u(1-\cos\theta)=2u\sin^2(\theta/2),
+\]
+so that the normalized ratio reproduces the Born weights:
+\begin{equation}
+\label{eq:born_from_lengths}
+\frac{\ell_+(0)}{\ell_+(0)+\ell_-(0)}=\cos^2(\theta/2),
+\qquad
+\frac{\ell_-(0)}{\ell_+(0)+\ell_-(0)}=\sin^2(\theta/2).
+\end{equation}
+
+\subsection{Equivalent encoding via projected areas (slicing proof)}
+\label{sec:born_projected_areas}
+
+Integrating the slice widths \eqref{eq:slice_lengths} over all vertical slices gives the projected areas on the \xyplane{} of the two corresponding surface patches (equivalently: the projected areas obtained by stacking the slice projections):
+\begin{align}
+\Pi_+
+&=\int_{-u}^{u}\ell_+(y_d)\,dy_d
+=(1+\cos\theta)\int_{-u}^{u}\sqrt{u^2-y_d^2}\,dy_d
+=(1+\cos\theta)\frac{\pi u^2}{2}
+=\pi u^2\cos^2(\theta/2),
+\\
+\Pi_-
+&=\int_{-u}^{u}\ell_-(y_d)\,dy_d
+=(1-\cos\theta)\frac{\pi u^2}{2}
+=\pi u^2\sin^2(\theta/2).
+\end{align}
+Hence
+\begin{equation}
+\label{eq:born_from_projected_areas}
+\frac{\Pi_+}{\Pi_++\Pi_-}=\cos^2(\theta/2),
+\qquad
+\frac{\Pi_-}{\Pi_++\Pi_-}=\sin^2(\theta/2),
+\end{equation}
+showing that \emph{disk areas}, \emph{minimal projected lengths}, and \emph{projected slice-integrated areas} all encode the same Born weights.
+
+\subsection{Geometric meaning of \texorpdfstring{\(\phi\)}{phi} and \texorpdfstring{\(\gamma\)}{gamma}}
+\label{sec:phase_geometry}
+
+Finally, the remaining angular degrees of freedom in \eqref{eq:spinor_symmetric_halfangle} are visible as in-face rotations of the two hyperchord faces.
+Using \eqref{eq:phase_split_defs_secIV}, the relative phase $\phi$ is the difference of component arguments,
+$\phi=\psi_\downarrow-\psi_\uparrow$, while the fiber (global) phase $\gamma$ is their average,
+$\gamma=\tfrac12(\psi_\uparrow+\psi_\downarrow)$.
+
+As summarized in Section~\ref{sec:hyperchords_phase}, the distinguished diameter directions drawn on $c_\uparrow$ and $c_\downarrow$ rotate within their respective face planes by angles determined by $\psi_\uparrow$ and $\psi_\downarrow$.
+Therefore:
+\begin{itemize}
+\item the \emph{relative} twist between the two face markers encodes $\phi$,
+\item a \emph{common} twist of both markers encodes $\gamma$ (i.e.\ the choice of representative along the $U(1)$ Hopf fiber).
+\end{itemize}
+In contrast, bilinear quantities such as the Bloch vector $\nn(\ssp)$ are insensitive to $\gamma$ and depend only on $(\theta,\phi)$.

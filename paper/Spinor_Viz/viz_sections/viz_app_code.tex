@@ -1,0 +1,199 @@
+This appendix provides complete pseudocode for the spinor visualization algorithm, consistent with the conventions of Section~\ref{sec:algorithm}. The pseudocode follows the structure of the reference Python implementation (the \texttt{spinor\_viz} package), which uses the symmetric phase parametrization adopted in the paper.
+
+\paragraph{Implementation note.}
+The reference Python implementation, available as an open-source package at \url{https://github.com/al-rigazzi/spinor_viz}, uses a colorblind-friendly palette (the Wong palette~\cite{wong2011points}) and distinct visual encodings to distinguish the two hyperchord circles.
+Specifically:
+\begin{itemize}
+    \item The \emph{upper hyperchord} $c_\uparrow$ is drawn with a thicker line (linewidth~3.0) in teal/bluish-green (\texttt{\#009E73}), and its kissing point with the equator $P_\uparrow$ is marked with an upward-pointing triangle ($\blacktriangle$).
+    \item The \emph{lower hyperchord} $c_\downarrow$ is drawn with a thinner line (linewidth~1.5) in orange (\texttt{\#E69F00}), and its kissing point with the equator $P_\downarrow$ is marked with a downward-pointing triangle ($\blacktriangledown$).
+    \item Phase-marker arrows use blue (\texttt{\#0072B2}) for the real part and vermillion (\texttt{\#D55E00}) for the imaginary part, with solid lines and arrowheads for positive values and dashed lines with filled circles for negative values.
+    \item The Bloch vector is drawn in reddish-purple (\texttt{\#CC79A7}).
+\end{itemize}
+These color and thickness choices ensure that the two hyperchord circles remain distinguishable both in color and in achromatic reproductions.
+
+
+\subsection{Main visualization routine}
+
+The main routine takes a spinor $\ssp \in \mathbb{C}^2$ and renders the complete hyperchord visualization.
+
+\medskip
+\noindent\textbf{Procedure: PlotSpinor3D}\\
+\textbf{Input:} Spinor $\ssp = [\spu, \spd]^T$, view direction (optional)\\
+\textbf{Output:} 3D plot of hyperchord visualization
+
+\begin{enumerate}
+\item \textit{Extract parameters and phases:}
+\begin{itemize}
+    \item $(\theta, \phi, \gamma, \psi_\uparrow, \psi_\downarrow, u, \rho)\gets \mathrm{SpinorToAngles}(\ssp)$
+    \item (Here $u=\ssp^\dagger\ssp$ and $\rho=\sqrt{u}=\|\ssp\|$.)
+\end{itemize}
+
+\item \textit{Define equatorial unit vectors:}
+\begin{itemize}
+    \item $\ee_r \gets [\cos\phi,\ \sin\phi,\ 0]$
+    \item $\ee_\varphi \gets [-\sin\phi,\ \cos\phi,\ 0]$
+\end{itemize}
+
+\item \textit{Compute equator contact points:}
+\begin{itemize}
+    \item $P_\uparrow \gets u\,\ee_r$
+    \item $P_\downarrow \gets -u\,\ee_r$
+\end{itemize}
+
+\item \textit{Compute half-angle moduli (for readability):}
+\begin{itemize}
+    \item $c \gets \cos(\theta/2)=|\spu|/\rho$
+    \item $s \gets \sin(\theta/2)=|\spd|/\rho$
+\end{itemize}
+
+\item \textit{Compute plane normals (Section~\ref{sec:algorithm}, Eq.~\eqref{eq:algorithm_plane_normals}):}
+\begin{itemize}
+    \item $\hat{\nn}_\uparrow \gets s\,\ee_r + c\,\eez$
+    \item $\hat{\nn}_\downarrow \gets c\,\ee_r - s\,\eez$
+\end{itemize}
+
+\item \textit{Compute plane offsets (Eq.~\eqref{eq:algorithm_plane_equations}):}
+\begin{itemize}
+    \item $d_\uparrow \gets \hat{\nn}_\uparrow\cdot P_\uparrow = u\,s$
+    \item $d_\downarrow \gets -(\hat{\nn}_\downarrow\cdot P_\downarrow)=u\,c$
+\end{itemize}
+
+\item \textit{Compute circle centers and radii:}
+\begin{itemize}
+    \item $C_\uparrow \gets d_\uparrow\,\hat{\nn}_\uparrow$
+    \item $C_\downarrow \gets (-d_\downarrow)\,\hat{\nn}_\downarrow$
+    \item $r_\uparrow \gets \sqrt{u^2-d_\uparrow^2}=u\,c$
+    \item $r_\downarrow \gets \sqrt{u^2-d_\downarrow^2}=u\,s$
+\end{itemize}
+
+\item \textit{Compute shared point (optional validation; Eq.~\eqref{eq:algorithm_shared_point}):}
+\begin{itemize}
+    \item $Q \gets u\bigl(-\cos\theta\,\ee_r + \sin\theta\,\eez\bigr)$
+\end{itemize}
+
+\item \textit{Draw reference elements:}
+\begin{itemize}
+    \item Draw equator $e$ as the circle of radius $u$ in the $xy$-plane.
+    \item Optionally draw the sphere $S_u$ as a transparent surface.
+\end{itemize}
+
+\item \textit{Choose in-plane bases for parameterization:}
+\begin{itemize}
+    \item $\bb \gets \ee_\varphi$
+    \item $\aaa_\uparrow \gets \bb \times \hat{\nn}_\uparrow$ \quad (normalize if needed)
+    \item $\aaa_\downarrow \gets \bb \times \hat{\nn}_\downarrow$ \quad (normalize if needed)
+\end{itemize}
+
+\item \textit{Draw upper hyperchord circle if $r_\uparrow>\epsilon$:}
+\begin{itemize}
+    \item Parameterize circle points $\xx_\uparrow(t)=C_\uparrow + r_\uparrow\bigl(\cos t\,\aaa_\uparrow+\sin t\,\bb\bigr)$ for $t\in[0,2\pi)$.
+    \item Draw $c_\uparrow$ in teal/bluish-green (thicker line).
+    \item Mark equator contact point $P_\uparrow$ with an upward triangle ($\blacktriangle$).
+    \item Draw the upper phase marker (Step~11).
+\end{itemize}
+
+\item \textit{Draw lower hyperchord circle if $r_\downarrow>\epsilon$:}
+\begin{itemize}
+    \item Parameterize circle points $\xx_\downarrow(t)=C_\downarrow + r_\downarrow\bigl(\cos t\,\aaa_\downarrow+\sin t\,\bb\bigr)$ for $t\in[0,2\pi)$.
+    \item Draw $c_\downarrow$ in orange (thinner line).
+    \item Mark equator contact point $P_\downarrow$ with a downward triangle ($\blacktriangledown$).
+    \item Draw the lower phase marker (Step~11).
+\end{itemize}
+
+\item \textit{Draw phase markers (diameter directions):}
+\begin{itemize}
+    \item $\dd_\uparrow \gets \cos\psi_\uparrow\,\aaa_\uparrow+\sin\psi_\uparrow\,\bb$
+    \item $\dd_\downarrow \gets \cos\psi_\downarrow\,\aaa_\downarrow+\sin\psi_\downarrow\,\bb$
+    \item Draw oriented segments:
+    \[
+      C_\uparrow \to C_\uparrow + r_\uparrow\,\dd_\uparrow,\qquad
+      C_\downarrow \to C_\downarrow + r_\downarrow\,\dd_\downarrow.
+    \]
+\end{itemize}
+\noindent
+(The relative rotation between the markers encodes $\phi=\psi_\downarrow-\psi_\uparrow$, while the common shift of both $\psi$'s corresponds to $\gamma\mapsto \gamma+\delta$ at fixed $\phi$.)
+
+\item \textit{Draw Bloch vector (optional):}
+\begin{itemize}
+    \item $\vv \gets \mathrm{SpinorToBloch}(\ssp)$
+    \item Draw arrow from origin to $\vv$ (or to $u\,\vv$ depending on your scene scaling).
+\end{itemize}
+\end{enumerate}
+
+\subsection{Spinor to angles conversion}
+
+\medskip
+\noindent\textbf{Procedure: SpinorToAngles}\\
+\textbf{Input:} Spinor $\ssp = [\spu, \spd]^T$\\
+\textbf{Output:} $(\theta,\phi,\gamma,\psi_\uparrow,\psi_\downarrow,u,\rho)$
+
+\begin{enumerate}
+\item $u \gets |\spu|^2+|\spd|^2$, \qquad $\rho \gets \sqrt{u}$
+\item $\theta/2 \gets \arctan2(|\spd|,|\spu|)$,\qquad $\theta \gets 2(\theta/2)$
+\item If $|\spu|>0$, set $\psi_\uparrow\gets \arg(\spu)$; else set $\psi_\uparrow\gets 0$
+\item If $|\spd|>0$, set $\psi_\downarrow\gets \arg(\spd)$; else set $\psi_\downarrow\gets 0$
+\item $\phi \gets \psi_\downarrow-\psi_\uparrow \ (\mathrm{mod}\ 2\pi)$
+\item $\gamma \gets \tfrac12(\psi_\uparrow+\psi_\downarrow)\ (\mathrm{mod}\ 2\pi)$
+\item Return $(\theta,\phi,\gamma,\psi_\uparrow,\psi_\downarrow,u,\rho)$
+\end{enumerate}
+
+\subsection{Spinor rotation}
+
+\medskip
+\noindent\textbf{Procedure: SpRot}\\
+\textbf{Input:} Axis-angle vector $\boldsymbol{\omega} = \omega \hat{\nn}$\\
+\textbf{Output:} $2\times 2$ unitary rotation matrix $\SpRotMat$
+
+\begin{enumerate}
+\item Compute rotation magnitude: $\omega \gets \|\boldsymbol{\omega}\|$
+\item Compute unit axis: $\hat{\nn} \gets \boldsymbol{\omega}/\omega$
+\item Compute generator: $\mathbf{M} \gets n_x \ssigma_x + n_y \ssigma_y + n_z \ssigma_z$
+\item Compute rotation matrix:
+\[
+\SpRotMat \gets \exp\!\bigl(-i\,\mathbf{M}\,\omega/2\bigr)
+\quad\text{(equivalently } \SpRotMat=\cos(\omega/2)\mathbf{I}-i\sin(\omega/2)\mathbf{M}\text{)}.
+\]
+\item Return $\SpRotMat$
+\end{enumerate}
+
+\subsection{Spinor to Bloch vector}
+
+\medskip
+\noindent\textbf{Procedure: SpinorToBloch}\\
+\textbf{Input:} Spinor $\ssp$\\
+\textbf{Output:} Bloch vector $\vv \in \mathbb{R}^3$
+
+\begin{enumerate}
+\item $v_x \gets \ssp^\dagger \ssigma_x \ssp / (\ssp^\dagger \ssp)$
+\item $v_y \gets \ssp^\dagger \ssigma_y \ssp / (\ssp^\dagger \ssp)$
+\item $v_z \gets \ssp^\dagger \ssigma_z \ssp / (\ssp^\dagger \ssp)$
+\item Return $\vv = [v_x, v_y, v_z]$
+\end{enumerate}
+
+\subsection{Animation routine}
+
+\medskip
+\noindent\textbf{Procedure: AnimateSpinor}\\
+\textbf{Input:} Initial spinor $\ssp_0$, rotation axis $\hat{\nn}$, number of frames $N$\\
+\textbf{Output:} Animation frames
+
+\begin{enumerate}
+\item Set $\beta_{\max} \gets 4\pi$ for a full $4\pi$ rotation (to show spinor periodicity)
+\item For $k = 1$ to $N$:
+\begin{itemize}
+    \item $\beta \gets \beta_{\max} \cdot (k-1)/(N-1)$
+    \item $\SpRotMat \gets \mathrm{SpRot}(\hat{\nn} \cdot \beta)$
+    \item $\ssp \gets \SpRotMat \cdot \ssp_0$
+    \item Clear frame, draw rotation axis, call PlotSpinor3D($\ssp$)
+    \item Capture frame
+\end{itemize}
+\end{enumerate}
+
+\subsection{Pauli matrices}
+
+For reference, the Pauli matrices used throughout:
+\begin{equation}
+\ssigma_x = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \quad
+\ssigma_y = \begin{bmatrix} 0 & -i \\ i & 0 \end{bmatrix}, \quad
+\ssigma_z = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}.
+\end{equation}

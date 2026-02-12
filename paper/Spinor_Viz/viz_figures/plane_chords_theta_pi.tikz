@@ -1,0 +1,54 @@
+\begin{tikzpicture}[scale=1.0, line cap=round, line join=round]
+\def\R{2.2}
+\def\thdeg{50}          % base theta
+\pgfmathsetmacro{\thp}{\thdeg+180}  % theta+pi
+
+\coordinate (O) at (0,0);
+\coordinate (A) at (-\R,0);
+\coordinate (B) at ( \R,0);
+\coordinate (P) at ({\R*cos(\thp)},{\R*sin(\thp)});
+\coordinate (Q) at ({\R*cos(\thp/2)},{\R*sin(\thp/2)});
+\coordinate (Qx) at ({\R*cos(\thp/2)},0);
+\coordinate (Qy) at (0,{\R*sin(\thp/2)});
+
+\draw[thick] (O) circle (\R);
+\draw[->] (-2.8,0) -- (2.9,0) node[below] {$x$};
+\draw[->] (0,-2.6) -- (0,2.9) node[left] {$y$};
+
+\draw[thick] (A) -- (B);
+\node[below] at (A) {$A$};
+\node[below] at (B) {$B$};
+
+\draw[dashed] (O) -- (P) node[pos=0.55, below left] {$\nn(\theta+\pi)$};
+\draw[->,thick] (P) -- (O) node[midway, above right] {$\uu(\theta+\pi)$};
+\fill (P) circle (1.2pt) node[below left] {$P(\theta+\pi)$};
+
+\def\planeang{\thp+90}
+\draw[thick]
+  ({-3.0*cos(\planeang)},{-3.0*sin(\planeang)}) --
+  ({ 3.0*cos(\planeang)},{ 3.0*sin(\planeang)})
+  node[pos=0.90, above right] {$\Pi_{\theta+\pi}$};
+
+\draw[thick] (P) -- (A) node[pos=0.55, left] {$c_1$};
+\draw[thick] (P) -- (B) node[pos=0.55, right] {$c_2$};
+
+\coordinate (Pa) at ($(P)!0.12!(A)$);
+\coordinate (Pb) at ($(P)!0.12!(B)$);
+\coordinate (Pc) at ($(Pa)+(Pb)-(P)$);
+\draw (Pa) -- (Pc) -- (Pb);
+
+\draw[dashed] (O) -- ({2.6*cos(\thp/2)},{2.6*sin(\thp/2)}) node[pos=0.92, below] {$\bb(\theta+\pi)$};
+\draw[dashed] (O) -- ({2.6*cos(\thp/2+90)},{2.6*sin(\thp/2+90)}) node[pos=0.92, right] {$\bb_\perp(\theta+\pi)$};
+
+\fill (Q) circle (1.1pt) node[below right] {$Q(\theta+\pi)$};
+\draw[thin] (O) -- (Q);
+\draw[thin] (Q) -- (Qx);
+\draw[thin] (Q) -- (Qy);
+\fill (Qx) circle (0.8pt);
+\fill (Qy) circle (0.8pt);
+
+\def\arcr{0.65}
+\draw (\arcr,0) arc[start angle=0, end angle=\thp, radius=\arcr];
+\node at ({1.15*\arcr*cos(\thp/2)},{1.15*\arcr*sin(\thp/2)}) {$\theta+\pi$};
+
+\end{tikzpicture}

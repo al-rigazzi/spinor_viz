@@ -35,6 +35,46 @@ LINEWIDTH_UP = 3.0        # Thicker for c_up
 LINEWIDTH_DOWN = 1.5      # Thinner for c_down
 
 
+def _add_static_legend_3d(ax: 'Axes3D', show_rotation_axis: bool = False) -> None:
+    """
+    Add static legend entries for all plottable entities in 3D spinor plots.
+
+    This creates invisible dummy plot elements with labels so the legend
+    always shows all possible items regardless of what's actually displayed.
+
+    Parameters
+    ----------
+    ax : Axes3D
+        The 3D axes to add legend entries to.
+    show_rotation_axis : bool
+        Whether to include the rotation axis entry.
+    """
+    # Dummy invisible points at origin for legend entries
+    dummy = np.array([[0, 0, 0]])
+
+    # Equator
+    ax.plot([], [], [], 'k', linewidth=1.5, label='Equator')
+
+    # Rotation axis (only if requested)
+    if show_rotation_axis:
+        ax.plot([], [], [], 'g:', linewidth=2, label='Rotation axis')
+
+    # Key points
+    ax.scatter([], [], [], color='black', s=50, label='Shared point')
+    ax.scatter([], [], [], color=COLOR_UP, s=50, label='Upper equator point', marker="^")
+    ax.scatter([], [], [], color=COLOR_DOWN, s=50, label='Lower equator point', marker="v")
+
+    # Hyperchords
+    ax.plot([], [], [], color=COLOR_UP, linewidth=LINEWIDTH_UP, label='Upper hyperchord (↑)')
+    ax.plot([], [], [], color=COLOR_DOWN, linewidth=LINEWIDTH_DOWN, label='Lower hyperchord (↓)')
+
+    # Diameter
+    ax.plot([], [], [], 'k', linewidth=1, label='Diameter')
+
+    # Bloch vector
+    ax.plot([], [], [], color=COLOR_BLOCH, linewidth=2, label='Bloch vector')
+
+
 def _is_displayable(v: np.ndarray, tol: float = 1e-8) -> bool:
     """Check if a vector has significant magnitude for display."""
     return np.linalg.norm(v) > tol
@@ -170,6 +210,8 @@ def plot_spinor_3d(
     view_angles: Tuple[float, float] = (30, 45),
     show_rotation_axis: Optional[np.ndarray] = None,
     figsize: Tuple[int, int] = (10, 10),
+    show_legend: bool = True,
+    show_axis_arrows: bool = True,
     **kwargs
 ) -> Axes3D:
     """
@@ -194,6 +236,10 @@ def plot_spinor_3d(
         If provided, shows this rotation axis as a green dotted line.
     figsize : Tuple[int, int]
         Figure size if creating new figure.
+    show_legend : bool
+        If True (default), shows the legend in the lower right corner.
+    show_axis_arrows : bool
+        If True, draws coordinate axes as arrows with arrowheads at +1.
     **kwargs
         Additional keyword arguments for customization.
 
@@ -256,19 +302,20 @@ def plot_spinor_3d(
             [0, factor * rot_axis[0]],
             [0, factor * rot_axis[1]],
             [0, factor * rot_axis[2]],
-            'g:', linewidth=2, label='Rotation axis'
+            'g:', linewidth=2
         )
 
     if plot_up and plot_down:
         # Key points
         ax.scatter(*up_and_down, color='black', s=50, zorder=5)
-        ax.scatter(*up_and_equator, color=COLOR_UP, s=50, zorder=5)
-        ax.scatter(*down_and_equator, color=COLOR_DOWN, s=50, zorder=5)
+        ax.scatter(*up_and_equator, color=COLOR_UP, s=100, zorder=5, marker="^")
+        ax.scatter(*down_and_equator, color=COLOR_DOWN, s=100, zorder=5, marker="v")
 
         # Meridian
         meridian_pts = _meridian_points(up_and_equator)
-        ax.plot(meridian_pts[:, 0], meridian_pts[:, 1], meridian_pts[:, 2],
-                'c:', linewidth=2)
+        meridian_plot, = ax.plot(meridian_pts[:, 0], meridian_pts[:, 1], meridian_pts[:, 2],
+                'c', linewidth=1)
+        meridian_plot.set_dashes([1,5])
 
     # Upper hyperchord
     if plot_up:
@@ -290,7 +337,7 @@ def plot_spinor_3d(
             down_and_equator, up_and_down, -(alpha - phi), is_up=False
         )
         ax.plot(down_circle[:, 0], down_circle[:, 1], down_circle[:, 2], color=COLOR_DOWN, linewidth=LINEWIDTH_DOWN)
-        ax.plot(down_x[:, 0], down_x[:, 1], down_x[:, 2], 'k', linewidth=1)
+        ax.plot(down_x[:, 0], down_x[:, 1], down_x[:, 2], 'k', linewidth=1)  # No label to avoid duplicate
 
         # Draw arrows (real with arrowhead, imaginary without)
         if _is_displayable(rot_pt_down - down_x[0]):
@@ -302,15 +349,56 @@ def plot_spinor_3d(
     vec = np.real(spinor_to_bloch_vector(s))
     ax.quiver(0, 0, 0, vec[1], vec[2], vec[3], color=COLOR_BLOCH, arrow_length_ratio=0.1, linewidth=2)
 
-    # Formatting
-    ax.set_xlim([-sphere_radius * 1.2, sphere_radius * 1.2])
-    ax.set_ylim([-sphere_radius * 1.2, sphere_radius * 1.2])
-    ax.set_zlim([-sphere_radius * 1.2, sphere_radius * 1.2])
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
+    # Formatting - axes from -1 to 1, no ticks
+    ax.set_xlim([-1, 1])
+    ax.set_ylim([-1, 1])
+    ax.set_zlim([0, 1])  # Only show Z >= 0
+    ax.set_xlabel('X', labelpad=-12)
+    ax.set_ylabel('Y', labelpad=-12)
+    ax.set_zlabel('Z', labelpad=-17)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_zticks([])
+    # Ensure axis labels remain visible
+    ax.xaxis.label.set_visible(True)
+    ax.yaxis.label.set_visible(True)
+    ax.zaxis.label.set_visible(True)
     ax.view_init(elev=view_angles[0], azim=view_angles[1])
-    ax.set_box_aspect([1, 1, 1])
+    ax.set_box_aspect([1, 1, 0.5])  # Adjust aspect for half Z range
+
+    # Remove grids on planes but keep axis lines
+    ax.xaxis.pane.fill = False
+    ax.yaxis.pane.fill = False
+    ax.zaxis.pane.fill = False
+    ax.xaxis.pane.set_edgecolor('none')
+    ax.yaxis.pane.set_edgecolor('none')
+    ax.zaxis.pane.set_edgecolor('none')
+    ax.grid(False)
+
+    # Draw axis arrows if requested
+    if show_axis_arrows:
+        # Hide default axes completely
+        ax.set_axis_off()
+
+        arrow_color = 'gray'
+        arrow_alpha = 0.7
+        # X axis: from -1 to 1, starting at (-1, -1, 0)
+        ax.quiver(-1, -1, 0, 2, 0, 0, color=arrow_color, alpha=arrow_alpha,
+                  arrow_length_ratio=0.05, linewidth=1.5)
+        ax.text(1, -1, 0.15, 'X', color=arrow_color, fontsize=10, ha='center', va='top')
+        # Y axis: from -1 to 1, starting at (-1, -1, 0)
+        ax.quiver(-1, -1, 0, 0, 2, 0, color=arrow_color, alpha=arrow_alpha,
+                  arrow_length_ratio=0.05, linewidth=1.5)
+        ax.text(-1, 1, 0.15, 'Y', color=arrow_color, fontsize=10, ha='center', va='top')
+        # Z axis: from 0 to 1, starting at (-1, -1, 0)
+        ax.quiver(-1, -1, 0, 0, 0, 1, color=arrow_color, alpha=arrow_alpha,
+                  arrow_length_ratio=0.1, linewidth=1.5)
+        ax.text(-1, -1, 1.15, 'Z', color=arrow_color, fontsize=10, ha='center', va='top')
+
+    # Add static legend entries and show legend outside plot (to the right)
+    if show_legend:
+        _add_static_legend_3d(ax, show_rotation_axis=show_rotation_axis is not None)
+        ax.legend(loc='center left', bbox_to_anchor=(1.05, 0.5), framealpha=0.9)
 
     return ax
 
@@ -326,24 +414,26 @@ def _draw_arrow_3d(
     """Draw a 3D arrow, with style depending on magnitude sign.
 
     Real part arrows get arrowheads, imaginary part arrows do not.
-    Positive values: solid line; Negative values: dotted line.
+    Positive values: solid line with arrowhead; Negative values: dashed line with filled circle.
     """
     if magnitude < 0:
         linestyle = ':'
         start, end = end, start
+        end_marker = 'o'  # Filled circle for negative
     else:
         linestyle = '-'
+        end_marker = '>'  # Arrowhead for positive
 
     ax.plot([start[0], end[0]], [start[1], end[1]], [start[2], end[2]],
             color=color, linestyle=linestyle, linewidth=2)
 
-    # Add arrowhead for real part only
+    # Add end marker for real part only
     if is_real and abs(magnitude) > 1e-8:
         direction = end - start
         length = np.linalg.norm(direction)
         if length > 1e-10:
-            # Draw a simple cone/arrow marker at the end
-            ax.scatter(*end, color=color, s=40, marker='>', zorder=5)
+            # Draw marker at the end: arrowhead for positive, filled circle for negative
+            ax.scatter(*end, color=color, s=40, marker=end_marker, zorder=5)
 
 
 def plot_spinor_2d(
@@ -426,13 +516,13 @@ def plot_spinor_2d(
         ax.plot(circle_pts[:, 0], circle_pts[:, 1], 'k', linewidth=1.5)
 
         if plot_up and plot_down:
-            ax.scatter(*up_and_down, color='black', s=50, zorder=5)
-            ax.scatter(*up_and_equator, color=COLOR_UP, s=50, zorder=5)
-            ax.scatter(*down_and_equator, color=COLOR_DOWN, s=50, zorder=5)
+            ax.scatter(*up_and_down, color='black', s=25, zorder=5)
+            ax.scatter(*up_and_equator, color=COLOR_UP, s=50, zorder=5, marker='^')
+            ax.scatter(*down_and_equator, color=COLOR_DOWN, s=50, zorder=5, marker='v')
 
             # Meridian projection
             meridian_pts = _meridian_points(up_and_equator_3d)
-            ax.plot(meridian_pts[:, 0], meridian_pts[:, 1], 'c:', linewidth=2)
+            ax.plot(meridian_pts[:, 0], meridian_pts[:, 1], 'c:', linewidth=0.1)
 
         # Upper hyperchord
         if plot_up:
@@ -477,12 +567,43 @@ def plot_spinor_2d(
             if np.linalg.norm(dir_up) > 1e-10:
                 dir_up = dir_up / np.linalg.norm(dir_up)
                 center_up = up_and_down + dir_up * radius_up
+                u2d = dir_up
+                v2d = np.array([-u2d[1], u2d[0]])
+
+                u3d = up_and_equator_3d - center_3d
+                u3d_norm = np.linalg.norm(u3d)
+                if u3d_norm > 1e-10:
+                    u3d = u3d / u3d_norm
+                    normal = np.cross(up_circle_3d[1] - center_3d, up_circle_3d[2] - center_3d)
+                    normal_norm = np.linalg.norm(normal)
+                    if normal_norm > 1e-10:
+                        normal = normal / normal_norm
+                        v3d = np.cross(normal, u3d)
+                        v3d_norm = np.linalg.norm(v3d)
+                        if v3d_norm > 1e-10:
+                            v3d = v3d / v3d_norm
+
+                            def map_up_point(p3d: np.ndarray) -> np.ndarray:
+                                offset = p3d - center_3d
+                                x = np.dot(offset, u3d)
+                                y = np.dot(offset, v3d)
+                                angle = np.arctan2(y, x)
+                                return center_up + radius_up * (np.cos(angle) * u2d + np.sin(angle) * v2d)
 
                 circle_up = center_up + radius_up * np.column_stack([np.cos(angles), np.sin(angles)])
                 ax.plot(circle_up[:, 0], circle_up[:, 1], color=COLOR_UP, linewidth=LINEWIDTH_UP)
 
                 up_dot = center_up + dir_up * radius_up
-                ax.scatter(*up_dot, color=COLOR_UP, s=50, zorder=5)
+                ax.scatter(*up_dot, color=COLOR_UP, s=50, zorder=5, marker='^')
+
+                if "map_up_point" in locals():
+                    rot_pt_up = map_up_point(rot_pt_up_3d)
+                    up_x0 = map_up_point(up_x_3d[0])
+                    up_x1 = map_up_point(up_x_3d[1])
+                    if _is_displayable(up_x1 - rot_pt_up):
+                        _draw_arrow_2d(ax, rot_pt_up, up_x1, COLOR_REAL, np.real(s_up), is_real=True)
+                    if _is_displayable(up_x0 - rot_pt_up):
+                        _draw_arrow_2d(ax, rot_pt_up, up_x0, COLOR_IMAG, np.imag(s_up), is_real=False)
 
         if plot_down:
             down_circle_3d, down_x_3d, rot_pt_down_3d = _inclined_face_3d(
@@ -495,12 +616,43 @@ def plot_spinor_2d(
             if np.linalg.norm(dir_down) > 1e-10:
                 dir_down = dir_down / np.linalg.norm(dir_down)
                 center_down = up_and_down + dir_down * radius_down
+                u2d = dir_down
+                v2d = np.array([-u2d[1], u2d[0]])
+
+                u3d = down_and_equator_3d - center_3d
+                u3d_norm = np.linalg.norm(u3d)
+                if u3d_norm > 1e-10:
+                    u3d = u3d / u3d_norm
+                    normal = np.cross(down_circle_3d[1] - center_3d, down_circle_3d[2] - center_3d)
+                    normal_norm = np.linalg.norm(normal)
+                    if normal_norm > 1e-10:
+                        normal = normal / normal_norm
+                        v3d = np.cross(normal, u3d)
+                        v3d_norm = np.linalg.norm(v3d)
+                        if v3d_norm > 1e-10:
+                            v3d = v3d / v3d_norm
+
+                            def map_down_point(p3d: np.ndarray) -> np.ndarray:
+                                offset = p3d - center_3d
+                                x = np.dot(offset, u3d)
+                                y = np.dot(offset, v3d)
+                                angle = np.arctan2(y, x)
+                                return center_down + radius_down * (np.cos(angle) * u2d + np.sin(angle) * v2d)
 
                 circle_down = center_down + radius_down * np.column_stack([np.cos(angles), np.sin(angles)])
                 ax.plot(circle_down[:, 0], circle_down[:, 1], color=COLOR_DOWN, linewidth=LINEWIDTH_DOWN)
 
                 down_dot = center_down + dir_down * radius_down
-                ax.scatter(*down_dot, color=COLOR_DOWN, s=50, zorder=5)
+                ax.scatter(*down_dot, color=COLOR_DOWN, s=50, zorder=5, marker='v')
+
+                if "map_down_point" in locals():
+                    rot_pt_down = map_down_point(rot_pt_down_3d)
+                    down_x0 = map_down_point(down_x_3d[0])
+                    down_x1 = map_down_point(down_x_3d[1])
+                    if _is_displayable(rot_pt_down - down_x0):
+                        _draw_arrow_2d(ax, rot_pt_down, down_x0, COLOR_REAL, np.real(s_down), is_real=True)
+                    if _is_displayable(rot_pt_down - down_x1):
+                        _draw_arrow_2d(ax, rot_pt_down, down_x1, COLOR_IMAG, np.imag(s_down), is_real=False)
 
     # Formatting
     ax.set_aspect('equal')
@@ -524,18 +676,18 @@ def _draw_arrow_2d(
     """Draw a 2D arrow with appropriate style based on magnitude.
 
     Real part arrows get arrowheads, imaginary part arrows do not.
-    Positive values: solid line; Negative values: dotted line.
+    Positive values: solid line with arrowhead; Negative values: dashed line with filled circle.
     """
     if abs(magnitude) < 1e-8:
         return
 
     if magnitude < 0:
-        linestyle = ':'
+        linestyle = '--'
         start, end = end, start
-        draw_start_circle = True
+        draw_end_circle = True
     else:
         linestyle = '-'
-        draw_start_circle = False
+        draw_end_circle = False
 
     direction = end - start
     length = np.linalg.norm(direction)
@@ -546,23 +698,25 @@ def _draw_arrow_2d(
     ax.plot([start[0], end[0]], [start[1], end[1]],
             color=color, linestyle=linestyle, linewidth=2)
 
-    # Only draw arrowhead for real part
+    # Only draw end marker for real part
     if is_real:
-        dir_norm = direction / length
-        perp = np.array([-dir_norm[1], dir_norm[0]])
-        head_size = length * 0.08
+        if draw_end_circle:
+            # Filled circle for negative values
+            circle_radius = length * 0.04
+            circle = Circle(end, circle_radius, facecolor=color, edgecolor=color)
+            ax.add_patch(circle)
+        else:
+            # Arrowhead for positive values
+            dir_norm = direction / length
+            perp = np.array([-dir_norm[1], dir_norm[0]])
+            head_size = length * 0.04
 
-        head1 = end - dir_norm * head_size + perp * head_size * 0.4
-        head2 = end - dir_norm * head_size - perp * head_size * 0.4
+            head1 = end - dir_norm * head_size + perp * head_size * 0.4
+            head2 = end - dir_norm * head_size - perp * head_size * 0.4
 
-        triangle = Polygon([end, head1, head2], closed=True,
-                          facecolor=color, edgecolor=color)
-        ax.add_patch(triangle)
-
-    if draw_start_circle:
-        circle_radius = length * 0.03
-        circle = Circle(start, circle_radius, facecolor=color, edgecolor=color)
-        ax.add_patch(circle)
+            triangle = Polygon([end, head1, head2], closed=True,
+                              facecolor=color, edgecolor=color)
+            ax.add_patch(triangle)
 
 
 def plot_complex(
@@ -665,6 +819,115 @@ def plot_complex(
     return ax
 
 
+def _planar_arrow(
+    ax: plt.Axes,
+    start: np.ndarray,
+    end: np.ndarray,
+    color: Union[Tuple[float, float, float], str],
+    linestyle: str,
+    head_style: str
+) -> None:
+    ax.plot([start[0], end[0]], [start[1], end[1]], color=color, linestyle=linestyle, linewidth=2)
+    if head_style == "ellipse":
+        radius = np.linalg.norm(end - start) * 0.02
+        ax.add_patch(Circle(end, radius, facecolor=color, edgecolor=color))
+    else:
+        ax.annotate(
+            "",
+            xy=end,
+            xytext=start,
+            arrowprops=dict(arrowstyle="->", color=color, linewidth=2)
+        )
+
+
+def plot_planar_chord_panel(
+    angle: float,
+    ax: Optional[plt.Axes] = None,
+    label_angle: str = r"$\vartheta$",
+    red_negative: bool = False,
+    label_offsets: Tuple[float, float] = (0.08, 0.12),
+    font_sizes: Tuple[int, int, int] = (12, 11, 12)
+) -> plt.Axes:
+    """Plot a single planar chord panel matching gen_planar_chords.m."""
+    if ax is None:
+        _, ax = plt.subplots(figsize=(5, 4))
+
+    title_size, label_size, angle_size = font_sizes
+    R = 1.0
+    corner_size = 0.08
+    arc_r = 0.25
+    pts = 100
+    angles = np.linspace(0, 2 * np.pi, pts)
+
+    A = np.array([-R, 0.0])
+    B = np.array([R, 0.0])
+    Q = R * np.array([np.cos(angle), np.sin(angle)])
+
+    color_cycle = plt.rcParams["axes.prop_cycle"].by_key().get("color", [])
+    blue = color_cycle[0] if color_cycle else "tab:blue"
+    red = color_cycle[1] if len(color_cycle) > 1 else "tab:red"
+
+    ax.plot(R * np.cos(angles), R * np.sin(angles), "k", linewidth=1.5)
+    ax.plot([A[0], B[0]], [A[1], B[1]], "k-", linewidth=1)
+
+    d1 = R * np.array([np.cos(angle), np.sin(angle)])
+    d2 = -d1
+    ax.plot([d2[0], d1[0]], [d2[1], d1[1]], "k:", linewidth=1.2)
+
+    _planar_arrow(ax, Q, A, blue, "-", "plain")
+    red_style = "--" if red_negative else "-"
+    red_head = "ellipse" if red_negative else "plain"
+    _planar_arrow(ax, Q, B, red, red_style, red_head)
+
+    ax.plot(0, 0, "ko", markersize=4, markerfacecolor="w")
+
+    ax.text(A[0] - 0.12, A[1] + label_offsets[0], r"$P_-$", fontsize=label_size, ha="right")
+    ax.text(B[0] + 0.08, B[1] + label_offsets[0], r"$P_+$", fontsize=label_size)
+    ax.text(Q[0] + label_offsets[1], Q[1] + label_offsets[1], r"$Q$", fontsize=label_size)
+
+    mid_blue = (A + Q) / 2
+    ax.text(mid_blue[0] + (- 0.4 if not red_negative else +0.05), mid_blue[1] + 0.05,
+            r"$2\cos\frac{\vartheta}{2}$", fontsize=label_size - 1, color=blue)
+    mid_red = (B + Q) / 2
+    red_label = r"$-2\sin\frac{\vartheta}{2}$" if red_negative else r"$2\sin\frac{\vartheta}{2}$"
+    ax.text(mid_red[0] + (0.08 if not red_negative else -0.22),
+            mid_red[1] + (0.12 if not red_negative else -0.18),
+            red_label, fontsize=label_size - 1, color=red)
+
+    v1 = (A - Q) / np.linalg.norm(A - Q)
+    v2 = (B - Q) / np.linalg.norm(B - Q)
+    corner1 = Q + corner_size * v1
+    corner2 = Q + corner_size * v2
+    corner_mid = Q + corner_size * (v1 + v2)
+    ax.plot([corner1[0], corner_mid[0]], [corner1[1], corner_mid[1]], "k", linewidth=1)
+    ax.plot([corner2[0], corner_mid[0]], [corner2[1], corner_mid[1]], "k", linewidth=1)
+
+    arc_angles = np.linspace(0, angle, 50)
+    ax.plot(arc_r * np.cos(arc_angles), arc_r * np.sin(arc_angles), "k", linewidth=1)
+    ax.text(arc_r * 1.6 * np.cos(angle / 2), arc_r * 1.6 * np.sin(angle / 2),
+            label_angle, fontsize=angle_size)
+
+    ax.axis([-1.5 * R, 1.5 * R, -1.5 * R, 1.5 * R])
+    ax.axis("off")
+    ax.set_aspect("equal")
+    if title_size > 0:
+        ax.set_title("", fontsize=title_size)
+
+    return ax
+
+
+def plot_planar_chords_combined(
+    theta: float = np.deg2rad(50.0),
+    figsize: Tuple[int, int] = (10, 4)
+) -> Tuple[plt.Figure, np.ndarray]:
+    """Generate the two-panel planar chord construction figure."""
+    fig, axes = plt.subplots(1, 2, figsize=figsize)
+    plot_planar_chord_panel(theta, ax=axes[0], label_angle=r"$\vartheta$", red_negative=False)
+    plot_planar_chord_panel(theta + np.pi, ax=axes[1], label_angle=r"$\vartheta+\pi$", red_negative=True)
+    fig.tight_layout()
+    return fig, axes
+
+
 def _draw_labeled_arrow(
     ax: plt.Axes,
     start: np.ndarray,
@@ -699,7 +962,8 @@ def create_interactive_3d(
     spinor: Union[Spinor, np.ndarray],
     show_rotation_axis: Optional[np.ndarray] = None,
     width: int = 700,
-    height: int = 700
+    height: int = 700,
+    show_legend: bool = True
 ) -> go.Figure:
     """
     Create an interactive 3D Plotly visualization of a spinor.
@@ -712,6 +976,8 @@ def create_interactive_3d(
         If provided, shows this rotation axis.
     width, height : int
         Figure dimensions in pixels.
+    show_legend : bool
+        If True (default), shows the legend on the right side.
 
     Returns
     -------
@@ -766,6 +1032,12 @@ def create_interactive_3d(
             mode='lines', line=dict(color=COLOR_UP, width=6),
             name='Upper hyperchord (↑)'
         ))
+        # Diameter
+        fig.add_trace(go.Scatter3d(
+            x=up_x[:, 0], y=up_x[:, 1], z=up_x[:, 2],
+            mode='lines', line=dict(color='black', width=2),
+            name='Diameter'
+        ))
 
     # Lower hyperchord
     if _is_displayable(np.array([s_down])):
@@ -785,12 +1057,12 @@ def create_interactive_3d(
             mode='markers', marker=dict(size=8, color='black'),
             name='Shared point'
         ))
-        fig.add_trace(go.Scatter3d(
+        fig.add_trace(go.Scatter3d(marker_symbol="triangle_up",
             x=[up_and_equator[0]], y=[up_and_equator[1]], z=[up_and_equator[2]],
             mode='markers', marker=dict(size=8, color=COLOR_UP),
             name='Upper equator point'
         ))
-        fig.add_trace(go.Scatter3d(
+        fig.add_trace(go.Scatter3d(marker_symbol="triangle_down",
             x=[down_and_equator[0]], y=[down_and_equator[1]], z=[down_and_equator[2]],
             mode='markers', marker=dict(size=8, color=COLOR_DOWN),
             name='Lower equator point'
@@ -819,17 +1091,50 @@ def create_interactive_3d(
             name='Rotation axis'
         ))
 
-    # Layout
+    # Layout - axes from -1 to 1, no ticks
     fig.update_layout(
         scene=dict(
-            xaxis=dict(range=[-sphere_radius * 1.2, sphere_radius * 1.2]),
-            yaxis=dict(range=[-sphere_radius * 1.2, sphere_radius * 1.2]),
-            zaxis=dict(range=[-sphere_radius * 1.2, sphere_radius * 1.2]),
-            aspectmode='cube'
+            xaxis=dict(
+                range=[-1, 1],
+                showgrid=False,
+                showbackground=False,
+                zeroline=False,
+                showticklabels=False,
+                ticks='',
+                title='X'
+            ),
+            yaxis=dict(
+                range=[-1, 1],
+                showgrid=False,
+                showbackground=False,
+                zeroline=False,
+                showticklabels=False,
+                ticks='',
+                title='Y'
+            ),
+            zaxis=dict(
+                range=[0, 1],  # Only show Z >= 0
+                showgrid=False,
+                showbackground=False,
+                zeroline=False,
+                showticklabels=False,
+                ticks='',
+                title='Z'
+            ),
+            aspectmode='manual',
+            aspectratio=dict(x=1, y=1, z=0.5)  # Adjust aspect for half Z range
         ),
         width=width,
         height=height,
-        title='Spinor Hyperchord Visualization'
+        title='Spinor Hyperchord Visualization',
+        showlegend=show_legend,
+        legend=dict(
+            yanchor='middle',
+            y=0.5,
+            xanchor='left',
+            x=1.02,
+            bgcolor='rgba(255, 255, 255, 0.9)'
+        )
     )
 
     return fig

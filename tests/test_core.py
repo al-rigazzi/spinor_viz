@@ -14,6 +14,7 @@ from spinor_viz.core import (
     spinor_to_bloch_vector,
     Spinor,
     normalize,
+    fix_gauge,
 )
 
 
@@ -224,6 +225,79 @@ class TestSpinorClass:
 
         # Self inner product
         assert_allclose(s @ s, 1, atol=1e-10)
+
+
+class TestFixGauge:
+    """Tests for gauge fixing (making first component real and non-negative)."""
+
+    def test_real_positive_unchanged(self):
+        """A spinor with real positive first component is unchanged."""
+        s = np.array([1.0, 1j], dtype=complex)
+        result = fix_gauge(s)
+        assert_allclose(result, s, atol=1e-12)
+
+    def test_removes_phase_of_first_component(self):
+        """First component should become real and non-negative."""
+        s = np.array([1j, 1.0], dtype=complex)
+        result = fix_gauge(s)
+        assert result[0].imag == pytest.approx(0, abs=1e-12)
+        assert result[0].real >= -1e-12
+
+    def test_preserves_norm(self):
+        """Gauge fixing should not change the norm."""
+        s = np.array([1 + 1j, 2 - 3j], dtype=complex)
+        result = fix_gauge(s)
+        assert_allclose(np.linalg.norm(result), np.linalg.norm(s), atol=1e-12)
+
+    def test_preserves_relative_phase(self):
+        """The relative phase between components should be preserved."""
+        s = np.array([np.exp(1j * 0.5), np.exp(1j * 1.2)], dtype=complex)
+        result = fix_gauge(s)
+        # Original relative phase
+        rel_orig = np.angle(s[1]) - np.angle(s[0])
+        # After gauge fixing, phase of [0] is 0
+        rel_fixed = np.angle(result[1])
+        assert rel_fixed == pytest.approx(rel_orig, abs=1e-12)
+
+    def test_zero_first_component_unchanged(self):
+        """When first component is zero, spinor should be returned unchanged."""
+        s = np.array([0.0, 1.0], dtype=complex)
+        result = fix_gauge(s)
+        assert_allclose(result, s, atol=1e-12)
+
+    def test_near_zero_first_component(self):
+        """When first component is near-zero, spinor should be unchanged."""
+        s = np.array([1e-15, 1.0], dtype=complex)
+        result = fix_gauge(s)
+        assert_allclose(result, s, atol=1e-12)
+
+    def test_negative_real_first_component(self):
+        """A negative real first component should become positive."""
+        s = np.array([-1.0, 0.5], dtype=complex)
+        result = fix_gauge(s)
+        assert result[0].real == pytest.approx(1.0, abs=1e-12)
+        assert result[0].imag == pytest.approx(0, abs=1e-12)
+        assert result[1].real == pytest.approx(-0.5, abs=1e-12)
+
+    def test_spinor_method(self):
+        """Spinor.gauge_fixed() should match fix_gauge."""
+        sp = Spinor(np.array([1j, 1.0]))
+        gf = sp.gauge_fixed()
+        expected = fix_gauge(sp.components)
+        assert_allclose(gf.components, expected, atol=1e-12)
+
+    def test_bloch_vector_invariant(self):
+        """Gauge fixing must not change the Bloch vector."""
+        sp = Spinor.random(seed=42)
+        gf = sp.gauge_fixed()
+        assert_allclose(gf.bloch_vector(), sp.bloch_vector(), atol=1e-10)
+
+    def test_idempotent(self):
+        """Applying gauge fixing twice gives the same result."""
+        s = np.array([1 + 2j, 3 - 1j], dtype=complex)
+        once = fix_gauge(s)
+        twice = fix_gauge(once)
+        assert_allclose(twice, once, atol=1e-12)
 
 
 if __name__ == "__main__":

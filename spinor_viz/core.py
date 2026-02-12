@@ -205,6 +205,41 @@ def spinor_to_bloch_vector(s: np.ndarray, t: Optional[np.ndarray] = None) -> np.
     return v
 
 
+def fix_gauge(s: np.ndarray, tol: float = 1e-10) -> np.ndarray:
+    """
+    Fix the gauge of a spinor so that its first component is real and non-negative.
+
+    Divides the spinor by the phase factor of its first component.
+    When the first component is (near-)zero, the spinor is returned unchanged.
+
+    This corresponds to the common quantum-computing convention where
+    state vectors are written with a real non-negative first amplitude.
+
+    Parameters
+    ----------
+    s : np.ndarray
+        2-element complex spinor.
+    tol : float
+        Threshold below which the first component is considered zero.
+
+    Returns
+    -------
+    np.ndarray
+        Gauge-fixed spinor with ``s[0]`` real and non-negative (when it
+        was not near-zero).
+
+    Examples
+    --------
+    >>> fix_gauge(np.array([1j, 1]))
+    array([1.+0.j, 0.-1.j])
+    """
+    s = np.asarray(s, dtype=complex).flatten()
+    if np.abs(s[0]) < tol:
+        return s
+    phase = np.exp(1j * np.angle(s[0]))
+    return s / phase
+
+
 def normalize(v: np.ndarray) -> np.ndarray:
     """Normalize a vector to unit length."""
     v = np.asarray(v)
@@ -367,6 +402,19 @@ class Spinor:
     def normalized(self) -> "Spinor":
         """Return a normalized copy of the spinor."""
         return Spinor(self.components / self.norm)
+
+    def gauge_fixed(self) -> "Spinor":
+        """
+        Return a copy with the first component made real and non-negative.
+
+        This removes the global phase freedom by dividing by the phase
+        of the first component.  When the first component is near-zero
+        the spinor is returned unchanged.
+
+        This is the standard convention used in quantum computing where
+        state vectors are written with a real, positive first amplitude.
+        """
+        return Spinor(fix_gauge(self.components))
 
     def to_halfangles(self) -> Tuple[float, float, float]:
         """Convert to half-angle representation (θ/2, α/2, φ/2)."""
