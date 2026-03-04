@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "spinor-viz"
 version = "0.1.0"
-description = "Interactive visualization of spinors using hyperchord representation"
+description = "Interactive visualization of spinors from 2D dihedrals to 3D plane dihedrals"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.9"

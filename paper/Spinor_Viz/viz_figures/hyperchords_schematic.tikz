@@ -24,7 +24,7 @@
 \draw (\arcr,0) arc[start angle=0, end angle=\tilt, radius=\arcr];
 \node at ({1.15*\arcr*cos(\tilt/2)},{1.15*\arcr*sin(\tilt/2)}) {$\theta$};
 
-% Hyperchord circles shown schematically as projected ellipses
+% Plane-dihedral circles shown schematically as projected ellipses
 % Upper face c_up (tilted ellipse above)
 \draw[thick, blue] (0,0.55) ellipse ({1.55} and {0.55});
 \node[right, blue] at (1.55,0.55) {$c_\uparrow$};

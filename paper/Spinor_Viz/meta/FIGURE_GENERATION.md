@@ -57,19 +57,19 @@ from paper.Spinor_Viz.meta.generate_figures_py import (
 
 ---
 
-## Figure 2: 3D Hyperchords Schematic
+## Figure 2: 3D Plane-Dihedral Schematic
 
 **Function:** `generate_hyperchords_3d()`
 
-**Description:** Generates a 3D schematic of the hyperchord construction showing the sphere, equator, and two hyperchord circles meeting at the shared point Q.
+**Description:** Generates a 3D schematic of the plane-dihedral construction showing the sphere, equator, and two plane-dihedral circles meeting at the shared point Q.
 
 **Output file:** `hyperchords_3d_py.png`
 
 **Key features:**
 - Uses `plot_spinor_3d()` from `spinor_viz.visualization`
 - Colorblind-friendly Wong palette:
-  - Teal/bluish-green (`#009E73`) for upper hyperchord (thicker line, linewidth 3.0)
-  - Orange (`#E69F00`) for lower hyperchord (thinner line, linewidth 1.5)
+  - Teal/bluish-green (`#009E73`) for upper plane-dihedral face (thicker line, linewidth 3.0)
+  - Orange (`#E69F00`) for lower plane-dihedral face (thinner line, linewidth 1.5)
   - Upward triangle (▲) marker for upper equator contact point
   - Downward triangle (▼) marker for lower equator contact point
 - Spinor: θ = π/3, φ = π/4
@@ -81,10 +81,10 @@ from paper.Spinor_Viz.meta.generate_figures_py import (
 
 **Function:** `generate_spinor_2d()`
 
-**Description:** Generates 2D projections of the hyperchord visualization in both circle and ellipse modes.
+**Description:** Generates 2D projections of the plane-dihedral visualization in both circle and ellipse modes.
 
 **Output files:**
-- `spinor2d_circles_py.png` — Circle mode (preserves true hyperchord radii)
+- `spinor2d_circles_py.png` — Circle mode (preserves true plane-dihedral radii)
 - `spinor2d_ellipses_py.png` — Ellipse mode (true orthogonal projection)
 
 ---
@@ -156,8 +156,8 @@ Interactive 3D Plotly visualization from `spinor_viz.visualization`.
 
 | Element                | Color            | Hex code    |
 |------------------------|------------------|-------------|
-| Upper hyperchord c↑    | Teal/bluish-green| `#009E73`   |
-| Lower hyperchord c↓    | Orange           | `#E69F00`   |
+| Upper plane-dihedral c↑    | Teal/bluish-green| `#009E73`   |
+| Lower plane-dihedral c↓    | Orange           | `#E69F00`   |
 | Real part arrows       | Blue             | `#0072B2`   |
 | Imaginary part arrows  | Vermillion       | `#D55E00`   |
 | Bloch vector           | Reddish-purple   | `#CC79A7`   |
@@ -166,8 +166,8 @@ Interactive 3D Plotly visualization from `spinor_viz.visualization`.
 
 | Element             | Linewidth |
 |---------------------|-----------|
-| Upper hyperchord c↑ | 3.0       |
-| Lower hyperchord c↓ | 1.5       |
+| Upper plane-dihedral c↑ | 3.0       |
+| Lower plane-dihedral c↓ | 1.5       |
 
 ## Marker Conventions
 

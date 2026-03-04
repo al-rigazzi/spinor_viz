@@ -1,7 +1,7 @@
 """
 Spinor Visualization Package
 
-Interactive visualization of spinors using the hyperchord representation.
+Interactive visualization of spinors from 2D dihedral lines to 3D plane dihedrals.
 """
 
 from spinor_viz.core import (

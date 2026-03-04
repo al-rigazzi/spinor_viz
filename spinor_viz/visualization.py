@@ -2,7 +2,7 @@
 Visualization utilities for spinors.
 
 This module provides 2D and 3D plotting functions for visualizing spinors
-using the hyperchord representation, with both static matplotlib plots
+using a 2D dihedral to 3D plane-dihedral construction, with both static matplotlib plots
 and interactive Plotly visualizations.
 """
 
@@ -64,9 +64,9 @@ def _add_static_legend_3d(ax: 'Axes3D', show_rotation_axis: bool = False) -> Non
     ax.scatter([], [], [], color=COLOR_UP, s=50, label='Upper equator point', marker="^")
     ax.scatter([], [], [], color=COLOR_DOWN, s=50, label='Lower equator point', marker="v")
 
-    # Hyperchords
-    ax.plot([], [], [], color=COLOR_UP, linewidth=LINEWIDTH_UP, label='Upper hyperchord (↑)')
-    ax.plot([], [], [], color=COLOR_DOWN, linewidth=LINEWIDTH_DOWN, label='Lower hyperchord (↓)')
+    # Plane-dihedral faces
+    ax.plot([], [], [], color=COLOR_UP, linewidth=LINEWIDTH_UP, label='Upper plane-dihedral face (↑)')
+    ax.plot([], [], [], color=COLOR_DOWN, linewidth=LINEWIDTH_DOWN, label='Lower plane-dihedral face (↓)')
 
     # Diameter
     ax.plot([], [], [], 'k', linewidth=1, label='Diameter')
@@ -127,7 +127,7 @@ def _inclined_face_3d(
     n_points: int = 50
 ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """
-    Compute the inclined circle (hyperchord face) in 3D.
+    Compute the inclined circle section (plane-dihedral face) in 3D.
 
     Parameters
     ----------
@@ -138,7 +138,7 @@ def _inclined_face_3d(
     rot_angle : float
         Rotation angle for the arrow position.
     is_up : bool
-        Whether this is the upper (True) or lower (False) hyperchord.
+        Whether this is the upper (True) or lower (False) plane-dihedral face.
     n_points : int
         Number of points for the circle.
 
@@ -215,12 +215,12 @@ def plot_spinor_3d(
     **kwargs
 ) -> Axes3D:
     """
-    Create a 3D visualization of a spinor using the hyperchord representation.
+    Create a 3D visualization of a spinor using the plane-dihedral construction.
 
     The visualization shows:
     - Equator circle (black)
-    - Upper hyperchord circle (blue)
-    - Lower hyperchord circle (red)
+    - Upper plane-dihedral face (circle section, blue)
+    - Lower plane-dihedral face (circle section, red)
     - Bloch vector (arrow from origin)
     - Arrows indicating spinor component values
 
@@ -317,7 +317,7 @@ def plot_spinor_3d(
                 'c', linewidth=1)
         meridian_plot.set_dashes([1,5])
 
-    # Upper hyperchord
+    # Upper plane-dihedral face
     if plot_up:
         up_circle, up_x, rot_pt_up = _inclined_face_3d(
             up_and_equator, up_and_down, alpha + phi, is_up=True
@@ -331,7 +331,7 @@ def plot_spinor_3d(
         if _is_displayable(up_x[0] - rot_pt_up):
             _draw_arrow_3d(ax, rot_pt_up, up_x[0], COLOR_IMAG, np.imag(s_up), is_real=False)
 
-    # Lower hyperchord
+    # Lower plane-dihedral face
     if plot_down:
         down_circle, down_x, rot_pt_down = _inclined_face_3d(
             down_and_equator, up_and_down, -(alpha - phi), is_up=False
@@ -447,7 +447,7 @@ def plot_spinor_2d(
     """
     Create a 2D projection visualization of a spinor.
 
-    Projects the 3D hyperchord representation onto the xy-plane.
+    Projects the 3D plane-dihedral faces onto the xy-plane.
 
     Parameters
     ----------
@@ -524,7 +524,7 @@ def plot_spinor_2d(
             meridian_pts = _meridian_points(up_and_equator_3d)
             ax.plot(meridian_pts[:, 0], meridian_pts[:, 1], 'c:', linewidth=0.1)
 
-        # Upper hyperchord
+        # Upper plane-dihedral face
         if plot_up:
             up_circle_3d, up_x_3d, rot_pt_up_3d = _inclined_face_3d(
                 up_and_equator_3d, up_and_down_3d, alpha + phi, is_up=True
@@ -539,7 +539,7 @@ def plot_spinor_2d(
             if _is_displayable(up_x[0] - rot_pt_up):
                 _draw_arrow_2d(ax, rot_pt_up, up_x[0], COLOR_IMAG, np.imag(s_up), is_real=False)
 
-        # Lower hyperchord
+        # Lower plane-dihedral face
         if plot_down:
             down_circle_3d, down_x_3d, rot_pt_down_3d = _inclined_face_3d(
                 down_and_equator_3d, up_and_down_3d, -(alpha - phi), is_up=False
@@ -660,7 +660,7 @@ def plot_spinor_2d(
     ax.set_ylim([-sphere_radius * 1.3, sphere_radius * 1.3])
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
-    ax.set_title('2D Hyperchord Projection')
+    ax.set_title('2D Dihedral / 3D Plane-Dihedral Projection')
 
     return ax
 
@@ -1022,7 +1022,7 @@ def create_interactive_3d(
         name='Equator'
     ))
 
-    # Upper hyperchord
+    # Upper plane-dihedral face
     if _is_displayable(np.array([s_up])):
         up_circle, up_x, rot_pt_up = _inclined_face_3d(
             up_and_equator, up_and_down, alpha + phi, is_up=True
@@ -1030,7 +1030,7 @@ def create_interactive_3d(
         fig.add_trace(go.Scatter3d(
             x=up_circle[:, 0], y=up_circle[:, 1], z=up_circle[:, 2],
             mode='lines', line=dict(color=COLOR_UP, width=6),
-            name='Upper hyperchord (↑)'
+            name='Upper plane-dihedral face (↑)'
         ))
         # Diameter
         fig.add_trace(go.Scatter3d(
@@ -1039,7 +1039,7 @@ def create_interactive_3d(
             name='Diameter'
         ))
 
-    # Lower hyperchord
+    # Lower plane-dihedral face
     if _is_displayable(np.array([s_down])):
         down_circle, down_x, rot_pt_down = _inclined_face_3d(
             down_and_equator, up_and_down, -(alpha - phi), is_up=False
@@ -1047,7 +1047,7 @@ def create_interactive_3d(
         fig.add_trace(go.Scatter3d(
             x=down_circle[:, 0], y=down_circle[:, 1], z=down_circle[:, 2],
             mode='lines', line=dict(color=COLOR_DOWN, width=3),
-            name='Lower hyperchord (↓)'
+            name='Lower plane-dihedral face (↓)'
         ))
 
     # Key points
@@ -1126,7 +1126,7 @@ def create_interactive_3d(
         ),
         width=width,
         height=height,
-        title='Spinor Hyperchord Visualization',
+        title='Spinor Plane-Dihedral Visualization',
         showlegend=show_legend,
         legend=dict(
             yanchor='middle',
