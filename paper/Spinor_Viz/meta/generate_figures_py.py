@@ -65,7 +65,7 @@ def generate_planar_chords() -> None:
 
 
 def generate_hyperchords_3d() -> None:
-    """Generate the 3D hyperchords schematic."""
+    """Generate the 3D plane-dihedral schematic."""
     spinor = Spinor.from_angles(theta=np.pi / 3, phi=np.pi / 4)
     ax = plot_spinor_3d(spinor, view_angles=VIEW_ANGLES_3D, show_legend=False)
     fig = ax.figure

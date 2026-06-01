@@ -1,8 +1,8 @@
-\section{\label{sec:hyperchords} Hyperchord construction in three dimensions}
+\section{\label{sec:hyperchords} Plane-dihedral construction in three dimensions}
 
 We now promote the planar half-angle construction of Section~\ref{sec:planar} to three dimensions,
 obtaining the central geometric objects of this paper: two offset circle sections on a sphere,
-which we call the \emph{hyperchord faces}.
+which we call the \emph{plane-dihedral faces}.
 
 \subsection{Setup: rotated equatorial plane and the highest equator point}
 \label{sec:hyperchords_setup}
@@ -81,7 +81,7 @@ Section~\ref{sec:hyperchords_equator}.)
 \subsection{Definition of the two faces via dihedral bisectors}
 \label{sec:hyperchords_faces}
 
-The hyperchord planes $U'$ and $L'$ are defined as follows.
+The two face planes $U'$ and $L'$ are defined as follows.
 
 First form the two unit \emph{bisector normals}
 \[
@@ -110,7 +110,7 @@ L' := \{\,\mathbf{x}\in\Rt : \nn_\downarrow\cdot \mathbf{x} = \nn_\downarrow\cdo
 \]
 By construction $Q\in U'\cap L'$ and $U'\perp L'$ (since their normals are orthogonal).
 
-The two hyperchord circles are then defined as the corresponding sphere sections
+The two plane-dihedral circles are then defined as the corresponding sphere sections
 \[
 c_\uparrow := U'\cap S_u,
 \qquad
@@ -159,7 +159,7 @@ which is precisely the desired half-angle scaling.
 \subsection{Connection to the equator and definition of the azimuth \texorpdfstring{$\phi$}{phi}}
 \label{sec:hyperchords_equator}
 
-Each hyperchord circle is tangent to the reference equator $e$ at a single point, and these two tangent
+Each plane-dihedral circle is tangent to the reference equator $e$ at a single point, and these two tangent
 points are antipodal.
 
 To see this, intersect $U'$ with the $xy$-plane $E$ (i.e. set $z=0$). Using
@@ -203,9 +203,9 @@ half-angle structure of the faces will induce the characteristic spinorial respo
 \begin{figure}[ht!]
     \centering
     \includegraphics[width=0.7\columnwidth]{viz_figures/hyperchords_3d_py.png}
-    \caption{Hyperchord construction. The rotated equatorial plane $E'$ (primary datum) fixes the unit normal
+    \caption{Plane-dihedral construction. The rotated equatorial plane $E'$ (primary datum) fixes the unit normal
     $\vv$ and the dihedral angle $\theta$ with the reference plane $E=\xyplane$. The rotated equator
-    $e'=E'\cap S_u$ has a distinguished highest point $Q$. The two hyperchord planes $U'$ and $L'$ are the
+    $e'=E'\cap S_u$ has a distinguished highest point $Q$. The two face planes $U'$ and $L'$ are the
     unique translates (through $Q$) of the two dihedral-bisector planes between $E$ and $E'$, with normals
     proportional to $\eez\pm\vv$. Their sphere sections are the circles $c_\uparrow$ (teal/bluish-green, thicker line, equator contact marked with $\blacktriangle$) and $c_\downarrow$ (orange, thinner line, equator contact marked with $\blacktriangledown$), with
     radii $r_\uparrow=u\cos(\theta/2)$ and $r_\downarrow=u\sin(\theta/2)$. Each circle is tangent to the

@@ -3,7 +3,7 @@
 \subsection{Comparison with existing visualizations}
 \label{sec:disc_comparison}
 
-The hyperchord representation offers several advantages over existing spinor visualization methods:
+The plane-dihedral representation offers several advantages over existing spinor visualization methods:
 
 \paragraph{Bloch sphere.}
 The standard Bloch sphere represents a spinor by a single point on the unit sphere, corresponding to the Bloch vector $\vv$. This representation:
@@ -13,7 +13,7 @@ The standard Bloch sphere represents a spinor by a single point on the unit sphe
     \item[\texttimes] Does not distinguish spinors that differ by a sign ($\ssp$ vs.\ $-\ssp$);
     \item[\texttimes] Obscures the $4\pi$-periodicity.
 \end{itemize}
-The hyperchord representation retains all spinorial degrees of freedom while still displaying the Bloch vector as the normal to the rotated equatorial plane.
+The plane-dihedral representation retains all spinorial degrees of freedom while still displaying the Bloch vector as the normal to the rotated equatorial plane.
 
 \paragraph{Stereographic projections.}
 Stereographic representations map the spinor to points in the complex plane. While mathematically elegant, they:
@@ -24,12 +24,12 @@ Stereographic representations map the spinor to points in the complex plane. Whi
 \end{itemize}
 
 \paragraph{Arrow/flag constructions.}
-Some authors visualize spinors using oriented objects (arrows with flags, or twisted ribbons) that acquire a twist under $2\pi$ rotations. Our approach is similar in spirit but more systematic: the hyperchord circles and their phase markers provide a complete, easily parsable representation.
+Some authors visualize spinors using oriented objects (arrows with flags, or twisted ribbons) that acquire a twist under $2\pi$ rotations. Our approach is similar in spirit but more systematic: the plane-dihedral circles and their phase markers provide a complete, easily parsable representation.
 
 \subsection{Physical interpretation}
 \label{sec:disc_physics}
 
-The hyperchord construction has a natural interpretation in terms of quantum measurement and state geometry:
+The plane-dihedral construction has a natural interpretation in terms of quantum measurement and state geometry:
 \begin{itemize}
     \item The \emph{face areas} encode the Born-rule weights for measuring spin-up vs.\ spin-down along the $z$-axis (equivalently: the squared moduli of the computational-basis amplitudes), via
     $\;A_\uparrow/(\pi u^2)=|\spu|^2/u\;$ and $\;A_\downarrow/(\pi u^2)=|\spd|^2/u$.
@@ -42,24 +42,24 @@ The hyperchord construction has a natural interpretation in terms of quantum mea
 \subsection{Two-dimensional projection}
 \label{sec:disc_2d}
 
-While the three-dimensional hyperchord representation provides complete geometric information, it can be challenging to interpret in static printed figures where interactive exploration is not possible. For such cases, we provide a two-dimensional projection onto the equatorial ($xy$) plane.
+While the three-dimensional plane-dihedral representation provides complete geometric information, it can be challenging to interpret in static printed figures where interactive exploration is not possible. For such cases, we provide a two-dimensional projection onto the equatorial ($xy$) plane.
 
 The 2D projection preserves all essential spinorial information:
 \begin{itemize}
     \item The \textbf{equator} projects to itself (a circle of radius $u$);
-    \item The \textbf{equator contact points} mark where each hyperchord meets the equator, encoding the azimuthal phase $\phi$. The upper hyperchord's contact point $P_\uparrow$ is marked with an upward-pointing triangle ($\blacktriangle$) in teal/bluish-green, and the lower hyperchord's contact point $P_\downarrow$ with a downward-pointing triangle ($\blacktriangledown$) in orange;
-    \item The \textbf{hyperchord circles} are visually distinguished by both color and line thickness: $c_\uparrow$ is drawn with a thicker line in teal/bluish-green and $c_\downarrow$ with a thinner line in orange;
+    \item The \textbf{equator contact points} mark where each plane-dihedral circle meets the equator, encoding the azimuthal phase $\phi$. The upper face contact point $P_\uparrow$ is marked with an upward-pointing triangle ($\blacktriangle$) in teal/bluish-green, and the lower face contact point $P_\downarrow$ with a downward-pointing triangle ($\blacktriangledown$) in orange;
+    \item The \textbf{plane-dihedral circles} are visually distinguished by both color and line thickness: $c_\uparrow$ is drawn with a thicker line in teal/bluish-green and $c_\downarrow$ with a thinner line in orange;
     \item The \textbf{circle radii} $r_\uparrow = u\cos(\theta/2)$ and $r_\downarrow = u\sin(\theta/2)$ are preserved, directly encoding the Born-rule probabilities via their areas;
     \item The \textbf{phase arrows} (blue for real part, vermillion for imaginary part) are drawn on each circle with solid lines and arrowheads for positive values and dashed lines with filled circles for negative values.
 \end{itemize}
 
 Two rendering modes are available:
 \begin{enumerate}
-    \item \textbf{Circle mode} (default): The hyperchord faces are drawn as circles with their true 3D radii. This provides the clearest visualization of the probability amplitudes, as the disk areas directly encode the Born-rule probabilities.
-    \item \textbf{Ellipse mode}: The hyperchord faces are drawn as ellipses, representing their true orthogonal projection onto the $xy$-plane. The major axis equals the hyperchord radius, while the minor axis is scaled by $\cos(\beta)$ where $\beta$ is the tilt angle of the hyperchord plane.
+    \item \textbf{Circle mode} (default): The plane-dihedral faces are drawn as circles with their true 3D radii. This provides the clearest visualization of the probability amplitudes, as the disk areas directly encode the Born-rule probabilities.
+    \item \textbf{Ellipse mode}: The plane-dihedral faces are drawn as ellipses, representing their true orthogonal projection onto the $xy$-plane. The major axis equals the plane-dihedral radius, while the minor axis is scaled by $\cos(\beta)$ where $\beta$ is the tilt angle of the face plane.
 \end{enumerate}
 
-Figure~\ref{fig:2d_projection} illustrates both modes for a general spinor state. In circle mode, the two circles touch at the projection of their shared 3D contact point, preserving the tangency condition while displaying the true hyperchord radii. In ellipse mode, the projected ellipses show the geometric distortion from the inclined 3D planes.
+Figure~\ref{fig:2d_projection} illustrates both modes for a general spinor state. In circle mode, the two circles touch at the projection of their shared 3D contact point, preserving the tangency condition while displaying the true plane-dihedral radii. In ellipse mode, the projected ellipses show the geometric distortion from the inclined 3D planes.
 
 \begin{figure}[ht!]
     \centering
@@ -69,7 +69,7 @@ Figure~\ref{fig:2d_projection} illustrates both modes for a general spinor state
     \subfloat[Ellipse mode]{%
         \includegraphics[width=0.45\textwidth]{viz_figures/spinor2d_ellipses_py.png}%
     }
-    \caption{Two-dimensional projection of the hyperchord visualization for the spinor $\ssp = [\cos(\pi/6), \sin(\pi/6)e^{i\pi/4}]^T$. (a)~Circle mode: the hyperchord faces are drawn as tangent circles with their true 3D radii. (b)~Ellipse mode: the hyperchord faces are drawn as their orthogonal projections onto the $xy$-plane.}
+    \caption{Two-dimensional projection of the plane-dihedral visualization for the spinor $\ssp = [\cos(\pi/6), \sin(\pi/6)e^{i\pi/4}]^T$. (a)~Circle mode: the plane-dihedral faces are drawn as tangent circles with their true 3D radii. (b)~Ellipse mode: the plane-dihedral faces are drawn as their orthogonal projections onto the $xy$-plane.}
     \label{fig:2d_projection}
 \end{figure}
 
@@ -78,14 +78,14 @@ The circle mode is recommended for most applications, as it preserves the intuit
 \subsection{Animation and dynamics}
 \label{sec:disc_animation}
 
-The hyperchord visualization is particularly effective for animating spinor dynamics. The reference implementation (Section~\ref{sec:algorithm} and Appendix~\ref{sec-app:pseudocode}), provided as the open\nobreakdash-source Python package \texttt{spinor\_viz}~\cite{spinor_viz_github}, supports frame-by-frame animation of:
+The plane-dihedral visualization is particularly effective for animating spinor dynamics. The reference implementation (Section~\ref{sec:algorithm} and Appendix~\ref{sec-app:pseudocode}), provided as the open\nobreakdash-source Python package \texttt{spinor\_viz}~\cite{spinor_viz_github}, supports frame-by-frame animation of:
 \begin{itemize}
-    \item Rotations about arbitrary axes, showing how the hyperchord circles smoothly transform;
+    \item Rotations about arbitrary axes, showing how the plane-dihedral circles smoothly transform;
     \item The $4\pi$ periodicity, by animating a full $4\pi$ rotation and observing the return to initial configuration;
     \item Precession dynamics, relevant for magnetic resonance applications.
 \end{itemize}
 
-Figure~\ref{fig:z_rotation} illustrates the evolution of a spinor under rotation about the $z$-axis. The initial state has $\theta=\pi/3$ and $\phi=\pi/4$. As the rotation angle increases from $0$ to $2\pi$, the hyperchord circles rotate about their respective axes, demonstrating the half-angle relationship: a $2\pi$ physical rotation corresponds to the spinor acquiring a phase of $\pi$, visually manifested as a $\pi$ rotation of the hyperchord orientations.
+Figure~\ref{fig:z_rotation} illustrates the evolution of a spinor under rotation about the $z$-axis. The initial state has $\theta=\pi/3$ and $\phi=\pi/4$. As the rotation angle increases from $0$ to $2\pi$, the plane-dihedral circles rotate about their respective axes, demonstrating the half-angle relationship: a $2\pi$ physical rotation corresponds to the spinor acquiring a phase of $\pi$, visually manifested as a $\pi$ rotation of the in-face marker orientations.
 
 \begin{figure}[ht!]
     % \captionsetup{skip=0.5pt}
@@ -117,7 +117,7 @@ Figure~\ref{fig:z_rotation} illustrates the evolution of a spinor under rotation
     \subfloat[$\omega=7\pi/2$]{%
         \includegraphics[width=0.35\textwidth,trim=0 4.1cm 0 3cm, clip]{viz_figures/anim_z_08_py.png}%
     }
-    \caption{Animation sequence of a spinor undergoing rotation about the $z$-axis. Starting from $\theta=\pi/3$, $\phi=\pi/4$, the spinor is rotated by angle $\omega$ via the operator $e^{-i\omega\sigma_z/2}$. After a $2\pi$ rotation (frame e), the spinor has returned to the same Bloch vector but acquired a $\pi$ phase shift, visible in the hyperchord orientations. Full return to the initial state requires a $4\pi$ rotation.}
+    \caption{Animation sequence of a spinor undergoing rotation about the $z$-axis. Starting from $\theta=\pi/3$, $\phi=\pi/4$, the spinor is rotated by angle $\omega$ via the operator $e^{-i\omega\sigma_z/2}$. After a $2\pi$ rotation (frame e), the spinor has returned to the same Bloch vector but acquired a $\pi$ phase shift, visible in the plane-dihedral marker orientations. Full return to the initial state requires a $4\pi$ rotation.}
     \label{fig:z_rotation}
 \end{figure}
 
@@ -150,7 +150,7 @@ The same rotation sequence is shown in the 2D projection modes in Figures~\ref{f
     \subfloat[$\omega=7\pi/2$]{%
         \includegraphics[width=0.23\textwidth]{viz_figures/anim2d_ellipse_08_py.png}%
     }
-    \caption{2D ellipse-mode projection of the $z$-rotation sequence from Fig.~\ref{fig:z_rotation}. The projected ellipses show the true orthogonal projection of the inclined hyperchord circles onto the $xy$-plane.}
+    \caption{2D ellipse-mode projection of the $z$-rotation sequence from Fig.~\ref{fig:z_rotation}. The projected ellipses show the true orthogonal projection of the inclined plane-dihedral circles onto the $xy$-plane.}
     \label{fig:z_rotation_2d_ellipse}
 \end{figure}
 
@@ -181,24 +181,15 @@ The same rotation sequence is shown in the 2D projection modes in Figures~\ref{f
     \subfloat[$\omega=7\pi/2$]{%
         \includegraphics[width=0.23\textwidth]{viz_figures/anim2d_circle_08_py.png}%
     }
-    \caption{2D circle-mode projection of the $z$-rotation sequence from Fig.~\ref{fig:z_rotation}. The tangent circles preserve the true hyperchord radii, with their areas encoding the Born-rule probabilities.}
+    \caption{2D circle-mode projection of the $z$-rotation sequence from Fig.~\ref{fig:z_rotation}. The tangent circles preserve the true plane-dihedral radii, with their areas encoding the Born-rule probabilities.}
     \label{fig:z_rotation_2d_circle}
 \end{figure}
 
-\subsection{Extensions}
-\label{sec:disc_extensions}
-
-The hyperchord construction naturally extends to:
-\begin{itemize}
-    \item \textbf{Four-component spinors}: The $\slc$ generalization uses hyperchords in $\Rtp$ to visualize Dirac spinors (to be presented in a companion paper);
-    \item \textbf{Mixed states}: Density matrices can be represented by ``fuzzy'' hyperchords with reduced radii reflecting purity;
-    \item \textbf{Multi-qubit systems}: Tensor product structure can be visualized using nested or linked hyperchord diagrams.
-\end{itemize}
 
 \subsection{Conclusions}
 \label{sec:disc_conclusions}
 
-We have presented a novel geometric construction for visualizing two-dimensional spinors. The hyperchord representation:
+We have presented a novel geometric construction for visualizing two-dimensional spinors. The plane-dihedral representation:
 \begin{enumerate}
     \item Faithfully encodes all spinorial degrees of freedom (moduli and phases);
     \item Makes the half-angle structure geometrically transparent;

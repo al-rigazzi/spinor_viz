@@ -1,25 +1,25 @@
 This appendix provides complete pseudocode for the spinor visualization algorithm, consistent with the conventions of Section~\ref{sec:algorithm}. The pseudocode follows the structure of the reference Python implementation (the \texttt{spinor\_viz} package), which uses the symmetric phase parametrization adopted in the paper.
 
 \paragraph{Implementation note.}
-The reference Python implementation, available as an open-source package at \url{https://github.com/al-rigazzi/spinor_viz}, uses a colorblind-friendly palette (the Wong palette~\cite{wong2011points}) and distinct visual encodings to distinguish the two hyperchord circles.
+The reference Python implementation, available as an open-source package at \url{https://github.com/al-rigazzi/spinor_viz}, uses a colorblind-friendly palette (the Wong palette~\cite{wong2011points}) and distinct visual encodings to distinguish the two plane-dihedral circles.
 Specifically:
 \begin{itemize}
-    \item The \emph{upper hyperchord} $c_\uparrow$ is drawn with a thicker line (linewidth~3.0) in teal/bluish-green (\texttt{\#009E73}), and its kissing point with the equator $P_\uparrow$ is marked with an upward-pointing triangle ($\blacktriangle$).
-    \item The \emph{lower hyperchord} $c_\downarrow$ is drawn with a thinner line (linewidth~1.5) in orange (\texttt{\#E69F00}), and its kissing point with the equator $P_\downarrow$ is marked with a downward-pointing triangle ($\blacktriangledown$).
+    \item The \emph{upper plane-dihedral face} $c_\uparrow$ is drawn with a thicker line (linewidth~3.0) in teal/bluish-green (\texttt{\#009E73}), and its kissing point with the equator $P_\uparrow$ is marked with an upward-pointing triangle ($\blacktriangle$).
+    \item The \emph{lower plane-dihedral face} $c_\downarrow$ is drawn with a thinner line (linewidth~1.5) in orange (\texttt{\#E69F00}), and its kissing point with the equator $P_\downarrow$ is marked with a downward-pointing triangle ($\blacktriangledown$).
     \item Phase-marker arrows use blue (\texttt{\#0072B2}) for the real part and vermillion (\texttt{\#D55E00}) for the imaginary part, with solid lines and arrowheads for positive values and dashed lines with filled circles for negative values.
     \item The Bloch vector is drawn in reddish-purple (\texttt{\#CC79A7}).
 \end{itemize}
-These color and thickness choices ensure that the two hyperchord circles remain distinguishable both in color and in achromatic reproductions.
+These color and thickness choices ensure that the two plane-dihedral circles remain distinguishable both in color and in achromatic reproductions.
 
 
 \subsection{Main visualization routine}
 
-The main routine takes a spinor $\ssp \in \mathbb{C}^2$ and renders the complete hyperchord visualization.
+The main routine takes a spinor $\ssp \in \mathbb{C}^2$ and renders the complete plane-dihedral visualization.
 
 \medskip
 \noindent\textbf{Procedure: PlotSpinor3D}\\
 \textbf{Input:} Spinor $\ssp = [\spu, \spd]^T$, view direction (optional)\\
-\textbf{Output:} 3D plot of hyperchord visualization
+\textbf{Output:} 3D plot of plane-dihedral visualization
 
 \begin{enumerate}
 \item \textit{Extract parameters and phases:}
@@ -84,7 +84,7 @@ The main routine takes a spinor $\ssp \in \mathbb{C}^2$ and renders the complete
     \item $\aaa_\downarrow \gets \bb \times \hat{\nn}_\downarrow$ \quad (normalize if needed)
 \end{itemize}
 
-\item \textit{Draw upper hyperchord circle if $r_\uparrow>\epsilon$:}
+\item \textit{Draw upper plane-dihedral circle if $r_\uparrow>\epsilon$:}
 \begin{itemize}
     \item Parameterize circle points $\xx_\uparrow(t)=C_\uparrow + r_\uparrow\bigl(\cos t\,\aaa_\uparrow+\sin t\,\bb\bigr)$ for $t\in[0,2\pi)$.
     \item Draw $c_\uparrow$ in teal/bluish-green (thicker line).
@@ -92,7 +92,7 @@ The main routine takes a spinor $\ssp \in \mathbb{C}^2$ and renders the complete
     \item Draw the upper phase marker (Step~11).
 \end{itemize}
 
-\item \textit{Draw lower hyperchord circle if $r_\downarrow>\epsilon$:}
+\item \textit{Draw lower plane-dihedral circle if $r_\downarrow>\epsilon$:}
 \begin{itemize}
     \item Parameterize circle points $\xx_\downarrow(t)=C_\downarrow + r_\downarrow\bigl(\cos t\,\aaa_\downarrow+\sin t\,\bb\bigr)$ for $t\in[0,2\pi)$.
     \item Draw $c_\downarrow$ in orange (thinner line).

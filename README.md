@@ -1,13 +1,13 @@
 # Spinor Visualization
 
-Interactive visualization of spinors using the **hyperchord representation**.
+Interactive visualization of spinors using a **2D dihedral-line to 3D plane-dihedral construction**.
 
-This project provides tools to visualize and understand spinors — mathematical objects that represent quantum mechanical spin states and rotations in 3D space. The hyperchord representation offers a geometric interpretation where spinor components are encoded as chords on a sphere.
+This project provides tools to visualize and understand spinors — mathematical objects that represent quantum mechanical spin states and rotations in 3D space. The construction starts from a 2D dihedral-line precursor and promotes it to 3D plane-dihedral faces (inclined plane–sphere circle sections) to encode spinor components geometrically.
 
 ## Features
 
 - **Spinor Mathematics**: Core functions for spinor operations, Pauli matrices, and SU(2) rotations
-- **2D Visualization**: Projection of hyperchord circles onto a plane
+- **2D Visualization**: Planar dihedral-line precursor and 2D projections
 - **3D Visualization**: Interactive 3D plots showing the full spinor geometry
 - **Interactive Notebooks**: Jupyter notebooks with widgets to explore:
   - Rotation axis and angle controls
@@ -51,7 +51,7 @@ jupyter lab notebooks/
 ```
 
 Available notebooks:
-1. **01_spinor_basics.ipynb** - Introduction to spinors and the hyperchord representation
+1. **01_spinor_basics.ipynb** - Introduction to the 2D dihedral-line to 3D plane-dihedral construction
 2. **02_rotations.ipynb** - Interactive exploration of spinor rotations
 3. **03_animations.ipynb** - Animated spinor evolution under rotation
 
@@ -63,9 +63,9 @@ A spinor $\psi = \begin{pmatrix} \psi_\uparrow \\ \psi_\downarrow \end{pmatrix}$
 - $\phi/2$: Azimuthal angle (overall phase difference)
 - $\alpha/2$: Overall phase
 
-The hyperchord representation maps these to geometric objects on a sphere, where:
+The geometric construction maps these to objects on a sphere, where:
 - The equator circle represents the base sphere
-- Two inclined circles (hyperchords) encode the spinor components
+- Two inclined plane–sphere circle sections (plane-dihedral faces) encode the spinor components
 - Arrows on the circles show the complex values
 
 ## License

@@ -1,6 +1,6 @@
 # Spinor Visualization Project
 
-This Python project provides interactive visualization of spinors using the hyperchord representation.
+This Python project provides interactive visualization of spinors using the plane dihedral representation.
 
 ## Project Structure
 
@@ -18,6 +18,7 @@ This Python project provides interactive visualization of spinors using the hype
 - Use ipywidgets for interactive notebook controls
 - Follow PEP 8 style guidelines
 - Document functions with docstrings
+- If prompted to create a venv, use Python 3.13
 
 ## Running the Project
 
